@@ -48,7 +48,7 @@ void ADrum::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Other
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Overlap %s"), *OverlappedComponent->GetName());
 //	UE_LOG(LogTemp, Warning, TEXT("Overlap %s"), *OtherActor->GetName());
-	UE_LOG(LogTemp, Warning, TEXT("Overlap %s"), *OtherComp->GetName());
+//	UE_LOG(LogTemp, Warning, TEXT("Overlap %s"), *OtherComp->GetName());
 	//Cast to drumstick
 	UHitterComponent* Hitter = Cast<UHitterComponent>(OtherComp);
 	ADrumstick* Drumstick = Cast<ADrumstick>(OtherActor);
@@ -56,7 +56,7 @@ void ADrum::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Other
 	{
 		//play sound
 		float Speed = Drumstick->GetHitterSpeed();
-		UE_LOG(LogTemp, Warning, TEXT("Velocity %f"), Speed);
+//		UE_LOG(LogTemp, Warning, TEXT("Velocity %f"), Speed);
 		if (Speed > 200)
 		{
 			Speed = 200;
@@ -66,6 +66,7 @@ void ADrum::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Other
 
 		//Take Velocity into account and change effect amplitude
 		Drumstick->PlayHapticEffectOnController(OnHitDrumHapticEffect);
+		OnHitDel.ExecuteIfBound();
 	}
 }
 

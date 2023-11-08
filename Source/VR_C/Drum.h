@@ -8,6 +8,9 @@
 #include "Components/AudioComponent.h"
 #include "Drum.generated.h"
 
+
+DECLARE_DELEGATE(FOnHitDelegate);
+
 UCLASS()
 class VR_C_API ADrum : public AActor
 {
@@ -24,6 +27,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	FOnHitDelegate OnHitDel;
 
 private:
 	UPROPERTY(EditAnywhere)

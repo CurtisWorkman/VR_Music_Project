@@ -76,7 +76,7 @@ bool UGrabComponent::TryGrab(UMotionControllerComponent* MotionController)
 			}
 		}
 		SetPrimitiveComponentPhysics(true, Parent);
-		UE_LOG(LogTemp, Warning, TEXT("snap with collision"));
+//		UE_LOG(LogTemp, Warning, TEXT("snap with collision"));
 			break;
 	}
 	
@@ -110,7 +110,7 @@ bool UGrabComponent::TryRelease(UMotionControllerComponent* MotionController)
 		break;
 	case Free:
 	case Snap:
-		UE_LOG(LogTemp, Warning, TEXT("Free Snap"))
+//		UE_LOG(LogTemp, Warning, TEXT("Free Snap"))
 		if (SimulateOnDrop)
 		{
 			SetPrimitiveComponentPhysics(true, Parent);
@@ -171,7 +171,7 @@ EControllerHand UGrabComponent::GetHeldByHand()
 {
 	if (MotionControllerRef != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Held"))
+//		UE_LOG(LogTemp, Warning, TEXT("Held"))
 		return MotionControllerRef->GetTrackingSource();
 	}
 	return EControllerHand::Special;
