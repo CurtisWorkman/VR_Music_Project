@@ -86,7 +86,7 @@ void ALessonTemplate::SpawnRhythmLessonBar()
 {
 	if (RhythmLessonBar == nullptr) return;
 	FVector Location = this->GetActorLocation();
-	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FRotator Rotation = this->GetActorRotation();
 	FVector TransformScale(1, 1, 1);
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.TransformScaleMethod = ESpawnActorScaleMethod::OverrideRootScale;
@@ -98,7 +98,7 @@ void ALessonTemplate::SpawnDrum()
 {
 	if (Drum == nullptr) return;
 	FVector Location = this->GetActorLocation() +FVector(0, 0, -100);
-	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FRotator Rotation = this->GetActorRotation();
 	FVector TransformScale(1, 1, 1);
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.TransformScaleMethod = ESpawnActorScaleMethod::OverrideRootScale;

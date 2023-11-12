@@ -3,6 +3,11 @@
 
 #include "LessonCrotchet.h"
 
+ALessonCrotchet::ALessonCrotchet() : ALessonTemplate()
+{
+	LessonDetails.LessonName = TEXT("Lesson Crotchet");
+}
+
 void ALessonCrotchet::BeginPlay()
 {
 	Super::BeginPlay();

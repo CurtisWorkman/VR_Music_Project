@@ -39,7 +39,6 @@ void AMenu::BeginPlay()
 
 	bMenuOpening = true;
 
-	UE_LOG(LogTemp, Warning, TEXT("Menu Spawn"));
 	if (MenuCurve)
 	{
 		FOnTimelineFloat TimelineCallback;
@@ -126,7 +125,7 @@ void AMenu::Tick(float DeltaTime)
 		FRotator MenuLookAtRotation = UKismetMathLibrary::FindLookAtRotation(InteractiveMenu->GetComponentLocation(), CameraLocation);
 		InteractiveMenu->SetWorldRotation(MenuLookAtRotation);
 
-		//asd
+		//
 		if (GetWidgetInteractionComponent(!bActiveMenuHandRight)->IsOverHitTestVisibleWidget())
 		{
 			if (bDoOnceEnableVis)
@@ -141,8 +140,9 @@ void AMenu::Tick(float DeltaTime)
 			UWidgetInteractionComponent* WidgetInteractionComponent = GetWidgetInteractionComponent(!bActiveMenuHandRight);
 			FVector CursorLocation = WidgetInteractionComponent->GetLastHitResult().ImpactPoint;
 			Cursor->SetWorldLocation(CursorLocation);
-			UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayPositionValue(MenuLaser, TEXT("User.PointArray"), 0, WidgetInteractionComponent->GetComponentLocation(), false);
-			UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayPositionValue(MenuLaser, TEXT("User.PointArray"), 1, CursorLocation, false);
+			TArray<FVector> VectorArray = { WidgetInteractionComponent->GetComponentLocation(), CursorLocation};
+			UNiagaraDataInterfaceArrayFunctionLibrary::SetNiagaraArrayVector(MenuLaser, TEXT("User.PointArray"), VectorArray);
+	
 		}
 		else
 		{

@@ -14,6 +14,10 @@ class VR_C_API ALessonCrotchet : public ALessonTemplate
 {
 	GENERATED_BODY()
 	
+
+public:
+	ALessonCrotchet();
+
 protected:
 	virtual void BeginPlay() override;
 

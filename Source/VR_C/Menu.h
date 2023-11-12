@@ -22,6 +22,7 @@ class VR_C_API AMenu : public AActor
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* MenuInteractRight;
 
+
 public:	
 	// Sets default values for this actor's properties
 	AMenu();
@@ -30,6 +31,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UNiagaraComponent* MenuLaser;
 
 public:	
 	// Called every frame
@@ -48,9 +52,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UWidgetComponent* InteractiveMenu;
-
-	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* MenuLaser;
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Cursor;

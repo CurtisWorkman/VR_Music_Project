@@ -10,6 +10,15 @@
 #include "Components/AudioComponent.h"
 #include "LessonTemplate.generated.h"
 
+USTRUCT()
+struct FLessonDetails				//edited in lesson template sub classes
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere)
+	FString LessonName = TEXT("Sample");
+};
+
 UCLASS()
 class VR_C_API ALessonTemplate : public AActor
 {
@@ -20,6 +29,9 @@ public:
 	// Sets default values for this actor's properties
 	ALessonTemplate();
 
+	FLessonDetails LessonDetails;
+
+	FString Test = TEXT("Test");
 
 protected:
 	// Called when the game starts or when spawned
@@ -33,6 +45,7 @@ protected:
 
 	ARhythmLesson* RhythmLessonBarRef;
 	ADrum* DrumRef;
+
 
 public:	
 	// Called every frame
