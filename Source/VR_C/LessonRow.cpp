@@ -6,7 +6,7 @@
 #include "LessonMenuWidget.h"
 #include "Components/Button.h"
 
-void ULessonRow::Setup(ULessonMenuWidget* InParent, int InIndex)
+void ULessonRow::Setup(ULessonMenuWidget* InParent, uint32 InIndex)
 {
 	Parent = InParent;
 	Index = InIndex;
@@ -14,8 +14,8 @@ void ULessonRow::Setup(ULessonMenuWidget* InParent, int InIndex)
 }
 
 void ULessonRow::OnClicked()
-{
-	if (Parent != nullptr) return;
+{	
+	if (Parent == nullptr) return;
 	Parent->SelectIndex(Index);
-	UE_LOG(LogTemp, Warning, TEXT("RowCLick"))
+	
 }

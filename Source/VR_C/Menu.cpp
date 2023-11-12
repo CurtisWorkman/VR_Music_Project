@@ -83,7 +83,7 @@ void AMenu::CloseMenu()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->RemoveMappingContext(MenuMappingContext);
+			Subsystem->RemoveMappingContext(MenuMappingContext);			//Take this out or do checks when other menu is open
 		}
 	}
 

@@ -12,6 +12,7 @@ void ALessonCrotchet::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLessonName(FText::FromString(TEXT("Lesson 1")));
+	AddToScore(0);
 	SetLessonText(FText::FromString(TEXT("Sample Lesson")));
 
 	char Notes[] = "CCQQC";

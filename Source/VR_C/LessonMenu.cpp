@@ -60,6 +60,8 @@ void ALessonMenu::BeginPlay()
 	}
 
 	ULessonMenuWidget* LessonMenuWidget = Cast<ULessonMenuWidget>(LessonMenuWidgetComp->GetUserWidgetObject());
+	LessonMenuWidget->SetMenuRef(this);
+	
 
 	for (int i = 0; i < Lessons.Num(); i++)
 	{
@@ -115,7 +117,7 @@ void ALessonMenu::Tick(float DeltaTime)
 	}
 }
 
-void ALessonMenu::StartLesson(int Index)
+void ALessonMenu::StartLesson(uint32 Index)
 {
 	FVector Location = this->GetActorLocation();
 	FRotator Rotation = this->GetActorRotation();
@@ -124,6 +126,19 @@ void ALessonMenu::StartLesson(int Index)
 	SpawnInfo.TransformScaleMethod = ESpawnActorScaleMethod::OverrideRootScale;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	CurrentLesson = GetWorld()->SpawnActor<ALessonTemplate>(Lessons[Index], Location, Rotation, SpawnInfo);
+
+	CloseMenu();
+}
+
+void ALessonMenu::CloseMenu()
+{
+	FAttachmentTransformRules AttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
+	GetWidgetInteractionComponent(bActiveMenuHandRight)->AttachToComponent(MotionControllerAimRef, AttachmentRules);
+	bool bIsDestroyed = Destroy();
+	if (bIsDestroyed)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Destroyed"));
+	}
 }
 
 void ALessonMenu::SetWidgetInteractionReferences()

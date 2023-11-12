@@ -19,8 +19,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* LessonName;
 
-	UFUNCTION(BlueprintCallable)
-	void Setup(class ULessonMenuWidget* Parent, int Index);
+
+	void Setup(class ULessonMenuWidget* Parent, uint32 Index);
 
 private:
 	UPROPERTY(meta = (BindWidget))

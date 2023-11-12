@@ -36,6 +36,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ULessonRow> LessonRowClass;
 
+	UFUNCTION()
 	void StartLesson();
 
 	ALessonMenu* MenuRef;

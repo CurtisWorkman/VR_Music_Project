@@ -31,9 +31,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void StartLesson(int Index);
+	void StartLesson(uint32 Index);
+	
 
 private:
+
+	void CloseMenu();
 
 	void SetWidgetInteractionReferences();
 	void SetMotionControllerReference();
