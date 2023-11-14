@@ -46,7 +46,7 @@ void ARhythmLesson::SpawnNoteMeshes(char Notes[])
 	FVector Max;
 
 	SheetMusicBarStaticMesh->GetLocalBounds(Min, Max);
-	UE_LOG(LogTemp, Warning, TEXT("Max %s"), *Max.ToString());
+//	UE_LOG(LogTemp, Warning, TEXT("Max %s"), *Max.ToString());
 
 	float MaxLength = 2 * Max.Y;			//add margins
 	float SizeLeft = MaxLength;
@@ -56,7 +56,7 @@ void ARhythmLesson::SpawnNoteMeshes(char Notes[])
 	{	
 		char Note = Notes[i];
 
-		UE_LOG(LogTemp, Warning, TEXT("NOte %c"), Note);
+//		UE_LOG(LogTemp, Warning, TEXT("NOte %c"), Note);
 
 		switch (Note)
 		{
@@ -83,7 +83,7 @@ void ARhythmLesson::SpawnNoteMeshes(char Notes[])
 		default:
 			break;
 		}
-		UE_LOG(LogTemp, Warning, TEXT("SizeLeft %f"), SizeLeft);
+//		UE_LOG(LogTemp, Warning, TEXT("SizeLeft %f"), SizeLeft);
 		
 	}
 }

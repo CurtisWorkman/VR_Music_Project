@@ -22,7 +22,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	int CurrentState = -1;
 
 	UPROPERTY(EditAnywhere)
 		USoundBase* TextSound;
@@ -30,6 +29,6 @@ private:
 	UFUNCTION()
 	void IncrementState();
 
-	int State = 0;
+	int State = -1;
 
 };

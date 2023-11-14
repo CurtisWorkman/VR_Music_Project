@@ -3,6 +3,8 @@
 
 #include "LessonTemplate.h"
 #include "TextToSpeechEngineSubsystem.h"
+#include "Components/WidgetComponent.h"
+#include "LessonDetailsWidget.h"
 
 // Sets default values
 ALessonTemplate::ALessonTemplate()
@@ -13,14 +15,8 @@ ALessonTemplate::ALessonTemplate()
 	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root Component"));
 	RootComponent = RootComp;
 
-	LessonName = CreateDefaultSubobject<UTextRenderComponent>(TEXT("LessonName"));
-	LessonName->SetupAttachment(RootComponent);
-
-	LessonScore = CreateDefaultSubobject<UTextRenderComponent>(TEXT("LessonScore"));
-	LessonScore->SetupAttachment(RootComponent);
-
-	LessonText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("LessonText"));
-	LessonText->SetupAttachment(RootComponent);
+	LessonWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Lesson Widget"));
+	LessonWidget->SetupAttachment(RootComp);
 
 	LessonMetronome = CreateDefaultSubobject<UAudioComponent>(TEXT("LessonMetronome"));
 	LessonMetronome->SetupAttachment(RootComponent);
@@ -40,14 +36,17 @@ void ALessonTemplate::BeginPlay()
 	
 	DrumRef->OnHitDel.BindUObject(this, &ALessonTemplate::RegisterHit);
 
+	LessonDetailsWidgetRef = Cast<ULessonDetailsWidget>(LessonWidget->GetWidget());
 
 }
 
 void ALessonTemplate::StartLessonText(const FText& Text, USoundBase* TextSound)
 {
-	LessonText->SetText(Text);
+	LessonDetailsWidgetRef->SetLessonText(Text);
 	SetTextToSpeechComponent(TextSound);
+	LessonTextToSpeech->OnAudioFinished.AddDynamic(this, &ALessonTemplate::IncrementState);
 	StartTextToSpeech(Text);
+
 	
 //	IncrementState();
 }
@@ -57,12 +56,12 @@ void ALessonTemplate::AddToScore(int ScoreToAdd)
 //	Score += ScoreToAdd;
 	UE_LOG(LogTemp, Warning, TEXT("Score: %d"), ScoreToAdd);
 	TotalScore = TotalScore + ScoreToAdd;
-	LessonScore->SetText(FText::AsNumber(TotalScore));
+	LessonDetailsWidgetRef->SetLessonScore(FText::AsNumber(TotalScore));
 }
 
 void ALessonTemplate::SetLessonName(const FText& Text)
 {
-	LessonName->SetText(Text);
+	LessonDetailsWidgetRef->SetLessonName(Text);
 }
 
 void ALessonTemplate::SetTextToSpeechComponent(USoundBase* TextSound)
@@ -79,7 +78,6 @@ void ALessonTemplate::StartRhythmLesson(char Notes[], int bpm)
 	//	lessonNotes = Notes;			//use ufunvtion with params instead of globes
 		bpmSet = bpm;
 		TimeBetweenTick = 1.0 / (bpmSet / 60);
-		UE_LOG(LogTemp, Warning, TEXT("between tick %f"), TimeBetweenTick)
 		numberOfPreTicks = 4;
 		SetNoteMarks(Notes);
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayPreTick, TimeBetweenTick, false);
@@ -106,8 +104,12 @@ void ALessonTemplate::Tick(float DeltaTime)
 
 void ALessonTemplate::StartTextToSpeech(const FText& Text)
 {
-	//Should be an audio component that has a bound function to check when audio is finished to increment state
-	LessonTextToSpeech->Play();
+	if (LessonTextToSpeech != nullptr)
+	{
+		//Should be an audio component that has a bound function to check when audio is finished to increment state
+		LessonTextToSpeech->Play();
+	}
+	
 	//UTextToSpeechEngineSubsystem* TextToSpeechSubsystem = GEngine->GetEngineSubsystem<UTextToSpeechEngineSubsystem>();
 	//if (TextToSpeechSubsystem)
 	//{

@@ -69,13 +69,7 @@ private:
 		USceneComponent* RootComp;
 
 	UPROPERTY(EditAnywhere)
-		UTextRenderComponent* LessonName;
-
-	UPROPERTY(EditAnywhere)
-		UTextRenderComponent* LessonScore;
-
-	UPROPERTY(EditAnywhere)
-		UTextRenderComponent* LessonText;
+		class UWidgetComponent* LessonWidget;
 
 	UPROPERTY(EditAnywhere)
 		UAudioComponent* LessonMetronome;
@@ -88,6 +82,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ADrum> Drum;
+
+	class ULessonDetailsWidget* LessonDetailsWidgetRef;
 
 	void StartTextToSpeech(const FText& Text);
 	void SetTextToSpeechComponent(USoundBase* TextSound);
