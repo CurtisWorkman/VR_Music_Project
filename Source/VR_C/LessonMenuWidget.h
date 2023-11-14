@@ -25,6 +25,8 @@ public:
 
 	void SetMenuRef(ALessonMenu* MenuRef);
 
+	void AddScoreToCurrentLesson(int Score);
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* LessonList;
@@ -35,6 +37,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class ULessonRow> LessonRowClass;
+
+	TArray<class ULessonRow*> ArrayOfLessons;
 
 	UFUNCTION()
 	void StartLesson();

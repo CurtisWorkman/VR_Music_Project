@@ -22,6 +22,8 @@ public:
 
 	void Setup(class ULessonMenuWidget* Parent, uint32 Index);
 
+	void SetLessonScore(int TotalScore);
+
 private:
 	UPROPERTY(meta = (BindWidget))
 		class UButton* RowButton;
@@ -33,5 +35,8 @@ private:
 
 	UFUNCTION()
 		void OnClicked();
-	
+
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* LessonScore;
+
 };

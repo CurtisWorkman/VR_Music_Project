@@ -55,7 +55,7 @@ void AMenu::BeginPlay()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(MenuMappingContext, 2);
+				Subsystem->AddMappingContext(MenuMappingContext, 2);	
 		}
 	}
 

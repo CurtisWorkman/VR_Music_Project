@@ -32,9 +32,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void StartLesson(uint32 Index);
-	
+
 
 private:
+
+	void EndLesson(int NewScore);
 
 	void CloseMenu();
 

@@ -10,7 +10,8 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"UMG"
+				"UMG",
+				"TextToSpeech"
 			]
 		}
 	],
@@ -31,6 +32,10 @@
 				"Android",
 				"HoloLens"
 			]
+		},
+		{
+			"Name": "TextToSpeech",
+			"Enabled": true
 		}
 	]
 }

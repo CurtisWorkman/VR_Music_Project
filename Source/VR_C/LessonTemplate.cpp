@@ -2,6 +2,7 @@
 
 
 #include "LessonTemplate.h"
+#include "TextToSpeechEngineSubsystem.h"
 
 // Sets default values
 ALessonTemplate::ALessonTemplate()
@@ -24,6 +25,9 @@ ALessonTemplate::ALessonTemplate()
 	LessonMetronome = CreateDefaultSubobject<UAudioComponent>(TEXT("LessonMetronome"));
 	LessonMetronome->SetupAttachment(RootComponent);
 
+	LessonTextToSpeech = CreateDefaultSubobject<UAudioComponent>(TEXT("LessonTextToSpeech"));
+	LessonTextToSpeech->SetupAttachment(RootComponent);
+
 }
 
 // Called when the game starts or when spawned
@@ -39,9 +43,13 @@ void ALessonTemplate::BeginPlay()
 
 }
 
-void ALessonTemplate::SetLessonText(const FText& Text)
+void ALessonTemplate::StartLessonText(const FText& Text, USoundBase* TextSound)
 {
 	LessonText->SetText(Text);
+	SetTextToSpeechComponent(TextSound);
+	StartTextToSpeech(Text);
+	
+//	IncrementState();
 }
 
 void ALessonTemplate::AddToScore(int ScoreToAdd)
@@ -57,6 +65,11 @@ void ALessonTemplate::SetLessonName(const FText& Text)
 	LessonName->SetText(Text);
 }
 
+void ALessonTemplate::SetTextToSpeechComponent(USoundBase* TextSound)
+{
+	LessonTextToSpeech->SetSound(TextSound);
+}
+
 void ALessonTemplate::StartRhythmLesson(char Notes[], int bpm)
 {
 	if (RhythmLessonBarRef != nullptr)
@@ -70,9 +83,18 @@ void ALessonTemplate::StartRhythmLesson(char Notes[], int bpm)
 		numberOfPreTicks = 4;
 		SetNoteMarks(Notes);
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayPreTick, TimeBetweenTick, false);
-
+		
 	}
 	
+}
+
+void ALessonTemplate::EndLesson()
+{
+	UE_LOG(LogTemp, Warning, TEXT("end"))
+	OnLessonEnd.ExecuteIfBound(TotalScore);
+	RhythmLessonBarRef->Destroy();
+	DrumRef->Destroy();
+	Destroy();
 }
 
 // Called every frame
@@ -80,6 +102,22 @@ void ALessonTemplate::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ALessonTemplate::StartTextToSpeech(const FText& Text)
+{
+	//Should be an audio component that has a bound function to check when audio is finished to increment state
+	LessonTextToSpeech->Play();
+	//UTextToSpeechEngineSubsystem* TextToSpeechSubsystem = GEngine->GetEngineSubsystem<UTextToSpeechEngineSubsystem>();
+	//if (TextToSpeechSubsystem)
+	//{
+	//	FName ChannelName = TEXT("Channel");
+	//	TextToSpeechSubsystem->SetRateOnChannel(ChannelName, 0.1);
+	//	TextToSpeechSubsystem->AddDefaultChannel(ChannelName);
+	//	TextToSpeechSubsystem->ActivateChannel(ChannelName);
+	//	TextToSpeechSubsystem->SpeakOnChannel(ChannelName, Text.ToString());
+	//	IncrementState();
+	//}	
 }
 
 void ALessonTemplate::SpawnRhythmLessonBar()
@@ -168,7 +206,6 @@ void ALessonTemplate::PlayPreTick()
 {
 	if (numberOfPreTicks > 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("tick"));
 		LessonMetronome->Play();
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayPreTick, TimeBetweenTick, false);
 		numberOfPreTicks--;
@@ -188,7 +225,6 @@ void ALessonTemplate::PlayTick()
 
 	if (Ticks - 1 > 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("tick"));
 		LessonMetronome->Play();
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayTick, TimeBetweenTick, false);
 		Ticks--;
@@ -197,7 +233,12 @@ void ALessonTemplate::PlayTick()
 
 void ALessonTemplate::LessonComplete()
 {
-	
+	IncrementState();
+}
+
+void ALessonTemplate::IncrementState()
+{
+	OnIncrementState.ExecuteIfBound();
 }
 
 void ALessonTemplate::SetNoteMarks(char Notes[])

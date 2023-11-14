@@ -10,6 +10,9 @@
 #include "Components/AudioComponent.h"
 #include "LessonTemplate.generated.h"
 
+DECLARE_DELEGATE_OneParam(FOnLessonEndDelegate, int);
+DECLARE_DELEGATE(FOnIncrementState);
+
 USTRUCT()
 struct FLessonDetails				//edited in lesson template sub classes
 {
@@ -18,6 +21,8 @@ struct FLessonDetails				//edited in lesson template sub classes
 	UPROPERTY(EditAnywhere)
 	FString LessonName = TEXT("Sample");
 };
+
+
 
 UCLASS()
 class VR_C_API ALessonTemplate : public AActor
@@ -31,20 +36,27 @@ public:
 
 	FLessonDetails LessonDetails;
 
-	FString Test = TEXT("Test");
+
+	FOnLessonEndDelegate OnLessonEnd;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void SetLessonText(const FText& Text);
+	void StartLessonText(const FText& Text, USoundBase* TextSound);
 	void AddToScore(int ScoreToAdd);
 	void SetLessonName(const FText& Text);
 
+	
+
 	void StartRhythmLesson(char Notes[], int bpm);
+
+	void EndLesson();
 
 	ARhythmLesson* RhythmLessonBarRef;
 	ADrum* DrumRef;
+
+	FOnIncrementState OnIncrementState;
 
 
 public:	
@@ -55,7 +67,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		USceneComponent* RootComp;
-
 
 	UPROPERTY(EditAnywhere)
 		UTextRenderComponent* LessonName;
@@ -69,12 +80,17 @@ private:
 	UPROPERTY(EditAnywhere)
 		UAudioComponent* LessonMetronome;
 
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* LessonTextToSpeech;
+
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ARhythmLesson> RhythmLessonBar;
 
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ADrum> Drum;
 
+	void StartTextToSpeech(const FText& Text);
+	void SetTextToSpeechComponent(USoundBase* TextSound);
 	void SpawnRhythmLessonBar();
 	void SpawnDrum();
 
@@ -83,6 +99,8 @@ private:
 	void PlayPreTick();
 	void PlayTick();
 	void LessonComplete();
+
+	void IncrementState();
 
 //	void SetNoteValuesArray(std::vector<float> NoteValuesArray);
 //	void GetNoteValuesArray();

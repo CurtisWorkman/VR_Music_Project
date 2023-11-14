@@ -13,8 +13,32 @@ void ALessonCrotchet::BeginPlay()
 	Super::BeginPlay();
 	SetLessonName(FText::FromString(TEXT("Lesson 1")));
 	AddToScore(0);
-	SetLessonText(FText::FromString(TEXT("Sample Lesson")));
+	OnIncrementState.BindUObject(this, &ALessonCrotchet::IncrementState);
+}
+
+void ALessonCrotchet::IncrementState()
+{
+	State++;
 
 	char Notes[] = "CCQQC";
-	StartRhythmLesson(Notes, 70);
+	switch (State)
+	{
+	case 0:
+		StartLessonText(FText::FromString(TEXT("A crotchet is a musical note with the time value of one beat - or a quarter of a semibreve. It is played for one quarter of the length of a semibreve.")), TextSound);
+		break;
+	case 1:
+
+		StartRhythmLesson(Notes, 70);
+		break;
+	case 2:
+		StartLessonText(FText::FromString(TEXT("Well Done")), TextSound);
+		break;
+	case 3:
+		EndLesson();
+		break;
+	default:
+		break;
+	}
+	CurrentState = State;
 }
+

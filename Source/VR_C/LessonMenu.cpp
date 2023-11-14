@@ -45,7 +45,7 @@ void ALessonMenu::BeginPlay()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(MenuMappingContext, 3);
+			Subsystem->AddMappingContext(MenuMappingContext, 2);
 		}
 	}
 
@@ -127,18 +127,49 @@ void ALessonMenu::StartLesson(uint32 Index)
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	CurrentLesson = GetWorld()->SpawnActor<ALessonTemplate>(Lessons[Index], Location, Rotation, SpawnInfo);
 
+	CurrentLesson->OnLessonEnd.BindUObject(this, &ALessonMenu::EndLesson);
+
 	CloseMenu();
+}
+
+void ALessonMenu::EndLesson(int NewScore)
+{
+	UE_LOG(LogTemp, Warning, TEXT("end lesson"));
+	ULessonMenuWidget* LessonMenuWidget = Cast<ULessonMenuWidget>(LessonMenuWidgetComp->GetUserWidgetObject());
+	LessonMenuWidget->AddScoreToCurrentLesson(NewScore);
+	LessonMenuWidgetComp->SetVisibility(true);
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(MenuMappingContext, 2);			//Take this out or do checks when other menu is open
+		}
+	}
 }
 
 void ALessonMenu::CloseMenu()
 {
 	FAttachmentTransformRules AttachmentRules = FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true);
 	GetWidgetInteractionComponent(bActiveMenuHandRight)->AttachToComponent(MotionControllerAimRef, AttachmentRules);
-	bool bIsDestroyed = Destroy();
-	if (bIsDestroyed)
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Destroyed"));
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->RemoveMappingContext(MenuMappingContext);			//Take this out or do checks when other menu is open
+		}
 	}
+
+	LessonMenuWidgetComp->SetVisibility(false);
+
+//	bool bIsDestroyed = Destroy();
+//	if (bIsDestroyed)
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("Destroyed"));
+//	}
 }
 
 void ALessonMenu::SetWidgetInteractionReferences()

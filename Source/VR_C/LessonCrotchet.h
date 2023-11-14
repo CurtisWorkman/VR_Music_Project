@@ -21,4 +21,15 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+private:
+	int CurrentState = -1;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* TextSound;
+
+	UFUNCTION()
+	void IncrementState();
+
+	int State = 0;
+
 };

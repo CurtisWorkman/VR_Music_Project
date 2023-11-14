@@ -5,6 +5,8 @@
 
 #include "LessonMenuWidget.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
+#include "Engine/Engine.h" 
 
 void ULessonRow::Setup(ULessonMenuWidget* InParent, uint32 InIndex)
 {
@@ -18,4 +20,17 @@ void ULessonRow::OnClicked()
 	if (Parent == nullptr) return;
 	Parent->SelectIndex(Index);
 	
+}
+
+void ULessonRow::SetLessonScore(int TotalScore)
+{
+	FString ScoreString = LessonScore->GetText().ToString();
+	if (ScoreString.IsNumeric())
+	{
+		int MyInt = FCString::Atoi(*ScoreString);
+		if (TotalScore > MyInt)
+		{
+			LessonScore->SetText(FText::AsNumber(TotalScore));
+		}
+	}
 }

@@ -40,7 +40,7 @@ void ULessonMenuWidget::AddLessonRow(uint32 Index, struct FLessonDetails* Lesson
 	Row->Setup(this, Index);
 	LessonList->AddChild(Row);
 
-		
+	ArrayOfLessons.Add(Row);
 	
 }
 
@@ -53,6 +53,12 @@ void ULessonMenuWidget::SelectIndex(uint32 Index)
 void ULessonMenuWidget::SetMenuRef(ALessonMenu* InMenuRef)
 {
 	this->MenuRef = InMenuRef;
+}
+
+void ULessonMenuWidget::AddScoreToCurrentLesson(int InScore)
+{
+	ULessonRow* CurrentRowLesson = ArrayOfLessons[SelectedIndex.GetValue()];
+	CurrentRowLesson->SetLessonScore(InScore);
 }
 
 void ULessonMenuWidget::StartLesson()

@@ -35,7 +35,7 @@ void AVRPawn::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-			Subsystem->AddMappingContext(AnimationMappingContext, 1);
+			Subsystem->AddMappingContext(AnimationMappingContext, 5);
 		}
 		CameraComponent = Cast<UCameraComponent>(GetDefaultSubobjectByName(TEXT("Camera")));
 		CapsuleComponent = Cast<UCapsuleComponent>(GetDefaultSubobjectByName(TEXT("CollisionCylinder")));
@@ -226,7 +226,7 @@ void AVRPawn::UpdateCapsulePosition()
 
 void AVRPawn::InitializeCapsulePosition()
 {
-	GetWorldTimerManager().SetTimer(UpdateCapsuleTimer, this, &AVRPawn::UpdateCapsuleHeight, 0.02f, true);
+//	GetWorldTimerManager().SetTimer(UpdateCapsuleTimer, this, &AVRPawn::UpdateCapsuleHeight, 0.02f, true);
 	CapsuleHalfHeight = CapsuleComponent->GetScaledCapsuleHalfHeight();
 }
 
