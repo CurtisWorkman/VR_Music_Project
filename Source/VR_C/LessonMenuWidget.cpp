@@ -14,7 +14,7 @@
 
 ULessonMenuWidget::ULessonMenuWidget(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer)
 {
-	ConstructorHelpers::FClassFinder<UUserWidget> LessonRowBPClass(TEXT("/Game/UI/WBP_LessonRow"));
+	ConstructorHelpers::FClassFinder<UUserWidget> LessonRowBPClass(TEXT("/Game/RhythmSystem/UI/WBP_LessonRow"));
 	if (!ensure(LessonRowBPClass.Class != nullptr)) return;
 
 	LessonRowClass = LessonRowBPClass.Class;
@@ -26,6 +26,7 @@ bool ULessonMenuWidget::Initialize()
 	bool Success = Super::Initialize();
 	if (!ensure(StartButton != nullptr)) return false;
 	StartButton->OnClicked.AddDynamic(this, &ULessonMenuWidget::StartLesson);
+	LessonList->ClearChildren();
 
 	return true;
 }
@@ -33,13 +34,14 @@ bool ULessonMenuWidget::Initialize()
 
 void ULessonMenuWidget::AddLessonRow(uint32 Index, struct FLessonDetails* LessonDeets)
 {
+	
 	FString LessonName = LessonDeets->LessonName;
-	LessonList->ClearChildren();
+
 	ULessonRow* Row = CreateWidget<ULessonRow>(this, LessonRowClass);	
 	Row->LessonName->SetText(FText::FromString(LessonName));
 	Row->Setup(this, Index);
 	LessonList->AddChild(Row);
-
+	int numLesson = LessonList->GetChildrenCount();
 	ArrayOfLessons.Add(Row);
 	
 }

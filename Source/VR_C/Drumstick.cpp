@@ -48,7 +48,6 @@ void ADrumstick::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 	ADrumstick* OtherStick = Cast<ADrumstick>(OtherActor);
 	if (OtherStick != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Sound"));
 		AudioHitComp->Play();
 		PlayHapticEffectOnController(OnHitStickHapticEffect);
 	}

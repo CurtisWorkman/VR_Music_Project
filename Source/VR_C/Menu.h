@@ -71,6 +71,8 @@ private:
 	float TimelineValue;
 	FTimeline MyTimeline;
 
+	float TimeLineLength;
+
 	float CursorLimitY;
 	float CursorLimitX;
 

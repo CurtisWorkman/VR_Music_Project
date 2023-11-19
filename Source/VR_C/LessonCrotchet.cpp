@@ -11,7 +11,7 @@ ALessonCrotchet::ALessonCrotchet() : ALessonTemplate()
 void ALessonCrotchet::BeginPlay()
 {
 	Super::BeginPlay();
-	SetLessonName(FText::FromString(TEXT("Lesson 1")));
+	SetLessonName(FText::FromString(TEXT("Lesson Crotchet")));
 	AddToScore(0);
 	OnIncrementState.BindUObject(this, &ALessonCrotchet::IncrementState);
 	IncrementState();
@@ -21,7 +21,7 @@ void ALessonCrotchet::IncrementState()
 {
 	State++;
 
-	char Notes[] = "CCQQC";
+	char Notes[] = "CCCC";
 	switch (State)
 	{
 	case 0:
@@ -31,9 +31,6 @@ void ALessonCrotchet::IncrementState()
 		StartRhythmLesson(Notes, 70);
 		break;
 	case 2:
-		StartLessonText(FText::FromString(TEXT("Well Done")), TextSound);
-		break;
-	case 3:
 		EndLesson();
 		break;
 	default:

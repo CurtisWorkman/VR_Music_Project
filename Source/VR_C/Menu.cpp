@@ -48,6 +48,7 @@ void AMenu::BeginPlay()
 		TimelineFinishedCallback.BindUFunction(this, FName{ TEXT("FinCurve") });
 		MyTimeline.AddInterpFloat(MenuCurve, TimelineCallback);
 		MyTimeline.SetTimelineFinishedFunc(TimelineFinishedCallback);
+		TimeLineLength = MyTimeline.GetTimelineLength();
 	}
 
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -204,8 +205,9 @@ void AMenu::SetMotionControllerReference()
 void AMenu::DoTick()
 {
 	TimelineValue = MyTimeline.GetPlaybackPosition();
-	InteractiveMenu->SetRelativeScale3D(FVector(TimelineValue * WidgetRelativeScaleOriginal));
-	UE_LOG(LogTemp, Warning, TEXT("Curve %f"), TimelineValue);
+	float PercentThrough = TimelineValue / TimeLineLength;
+	InteractiveMenu->SetRelativeScale3D(FVector(PercentThrough * WidgetRelativeScaleOriginal));
+//	UE_LOG(LogTemp, Warning, TEXT("Curve %f"), PercentThrough);
 }
 
 void AMenu::FinCurve()

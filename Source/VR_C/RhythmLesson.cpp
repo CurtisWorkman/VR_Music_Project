@@ -37,9 +37,9 @@ void ARhythmLesson::Tick(float DeltaTime)
 
 }
 
-void ARhythmLesson::SpawnNoteMeshes(char Notes[])
+void ARhythmLesson::SpawnNoteMeshes(FString Notes)
 {
-	int arrayLength = strlen(Notes);
+	int arrayLength = Notes.Len();
 	ArrayOfMeshes.resize(arrayLength);
 
 	FVector Min;
@@ -133,6 +133,7 @@ void ARhythmLesson::AddMusicNote(UStaticMesh* NoteToAdd, float SizeLeft, float M
 		
 		//Move notes to their correct positions. Depending on the note - take up a percentage of the space of the bar. A variable for space taken up
 		NewNote->SetRelativeLocation(FVector(0, -SizeLeft + AddedOffset, 0));
+		NewNote->SetRelativeRotation(FRotator(90, 0, 180));
 
 		//Make array of references to be accessed anc colour changed.
 		ArrayOfMeshes[noteNum] = NewNote;

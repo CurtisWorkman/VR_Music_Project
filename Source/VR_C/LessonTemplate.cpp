@@ -31,7 +31,6 @@ void ALessonTemplate::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnRhythmLessonBar();
 	SpawnDrum();
 	
 	DrumRef->OnHitDel.BindUObject(this, &ALessonTemplate::RegisterHit);
@@ -44,19 +43,16 @@ void ALessonTemplate::StartLessonText(const FText& Text, USoundBase* TextSound)
 {
 	LessonDetailsWidgetRef->SetLessonText(Text);
 	SetTextToSpeechComponent(TextSound);
+	LessonTextToSpeech->OnAudioFinished.Clear();
 	LessonTextToSpeech->OnAudioFinished.AddDynamic(this, &ALessonTemplate::IncrementState);
-	StartTextToSpeech(Text);
-
-	
-//	IncrementState();
+	StartTextToSpeech();
 }
 
 void ALessonTemplate::AddToScore(int ScoreToAdd)
 {
-//	Score += ScoreToAdd;
-	UE_LOG(LogTemp, Warning, TEXT("Score: %d"), ScoreToAdd);
-	TotalScore = TotalScore + ScoreToAdd;
-	LessonDetailsWidgetRef->SetLessonScore(FText::AsNumber(TotalScore));
+	int CurrentScore = LessonDetailsWidgetRef->GetLessonScore();
+	CurrentScore = CurrentScore + ScoreToAdd;
+	LessonDetailsWidgetRef->SetLessonScore(FText::AsNumber(CurrentScore));
 }
 
 void ALessonTemplate::SetLessonName(const FText& Text)
@@ -69,13 +65,15 @@ void ALessonTemplate::SetTextToSpeechComponent(USoundBase* TextSound)
 	LessonTextToSpeech->SetSound(TextSound);
 }
 
-void ALessonTemplate::StartRhythmLesson(char Notes[], int bpm)
+void ALessonTemplate::StartRhythmLesson(FString Notes, int bpm)
 {
+	LessonScore = 0;
+	Ticks = 4;
+	SpawnRhythmLessonBar();
 	if (RhythmLessonBarRef != nullptr)
 	{
+		
 		RhythmLessonBarRef->SpawnNoteMeshes(Notes);
-		//Start Timing with notes
-	//	lessonNotes = Notes;			//use ufunvtion with params instead of globes
 		bpmSet = bpm;
 		TimeBetweenTick = 1.0 / (bpmSet / 60);
 		numberOfPreTicks = 4;
@@ -88,7 +86,7 @@ void ALessonTemplate::StartRhythmLesson(char Notes[], int bpm)
 
 void ALessonTemplate::EndLesson()
 {
-	UE_LOG(LogTemp, Warning, TEXT("end"))
+	int TotalScore = LessonDetailsWidgetRef->GetLessonScore();
 	OnLessonEnd.ExecuteIfBound(TotalScore);
 	RhythmLessonBarRef->Destroy();
 	DrumRef->Destroy();
@@ -102,24 +100,13 @@ void ALessonTemplate::Tick(float DeltaTime)
 
 }
 
-void ALessonTemplate::StartTextToSpeech(const FText& Text)
+void ALessonTemplate::StartTextToSpeech()
 {
 	if (LessonTextToSpeech != nullptr)
 	{
 		//Should be an audio component that has a bound function to check when audio is finished to increment state
 		LessonTextToSpeech->Play();
 	}
-	
-	//UTextToSpeechEngineSubsystem* TextToSpeechSubsystem = GEngine->GetEngineSubsystem<UTextToSpeechEngineSubsystem>();
-	//if (TextToSpeechSubsystem)
-	//{
-	//	FName ChannelName = TEXT("Channel");
-	//	TextToSpeechSubsystem->SetRateOnChannel(ChannelName, 0.1);
-	//	TextToSpeechSubsystem->AddDefaultChannel(ChannelName);
-	//	TextToSpeechSubsystem->ActivateChannel(ChannelName);
-	//	TextToSpeechSubsystem->SpeakOnChannel(ChannelName, Text.ToString());
-	//	IncrementState();
-	//}	
 }
 
 void ALessonTemplate::SpawnRhythmLessonBar()
@@ -176,7 +163,12 @@ void ALessonTemplate::RegisterHit()
 		{
 			for (int i = ClosestPosition; i >= 0; i--)
 			{
-				NoteValuesArray[i] = 2;
+				if (NoteValuesArray[i] != 2)
+				{
+					NoteValuesArray[i] = 2;
+					RhythmLessonBarRef->ChangeNoteColour(i, 0);
+				}
+				
 			}		
 			float Score = 1 - closestNum;
 			if (Score > 0.95)
@@ -196,7 +188,8 @@ void ALessonTemplate::RegisterHit()
 				Score = 0;
 			}
 			int IntScore = static_cast<int>(Score);
-			AddToScore(IntScore);
+//			AddToScore(IntScore);
+			LessonScore = LessonScore + IntScore;
 			//Remove note from array so cant be scored again
 			//Change note colour depending on score
 			RhythmLessonBarRef->ChangeNoteColour(ClosestPosition, IntScore);
@@ -211,6 +204,7 @@ void ALessonTemplate::PlayPreTick()
 		LessonMetronome->Play();
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayPreTick, TimeBetweenTick, false);
 		numberOfPreTicks--;
+		UE_LOG(LogTemp, Warning, TEXT("pretick"))
 	}
 	else
 	{
@@ -234,8 +228,38 @@ void ALessonTemplate::PlayTick()
 }
 
 void ALessonTemplate::LessonComplete()
-{
-	IncrementState();
+{	
+	RhythmLessonBarRef->Destroy();
+	float LessonCompleteScore = MaxLessonScore * 0.75;
+	if (bEndless)
+	{
+
+		if (LessonScore >= LessonCompleteScore)
+		{
+			AddToScore(LessonScore);
+			//delegate execute if bound
+			OnEndlessLessonEnd.ExecuteIfBound();
+		}
+		else
+		{
+			EndLesson();
+		}
+	}
+	else
+	{
+		if (LessonScore >= LessonCompleteScore)
+		{
+			AddToScore(LessonScore);
+			StartLessonText(FText::FromString(TEXT("Well Done")), WellDoneAudio);
+		}
+		else
+		{
+			LessonTextToSpeech->OnAudioFinished.Clear();
+			LessonTextToSpeech->OnAudioFinished.AddDynamic(this, &ALessonTemplate::FinLessonTryAgainAudio);				//Seperate function so doesnt increment state. Can be done in same func with bool
+			StartLessonTryAgainAudio();
+		}
+	}
+
 }
 
 void ALessonTemplate::IncrementState()
@@ -243,11 +267,26 @@ void ALessonTemplate::IncrementState()
 	OnIncrementState.ExecuteIfBound();
 }
 
-void ALessonTemplate::SetNoteMarks(char Notes[])
+void ALessonTemplate::StartLessonTryAgainAudio()
 {
-	int arrayLength = strlen(Notes);
+	LessonDetailsWidgetRef->SetLessonText(FText::FromString(TEXT("Let's Try Again")));
+	SetTextToSpeechComponent(TryAgainAudio);
+	StartTextToSpeech();
+}
+
+void ALessonTemplate::FinLessonTryAgainAudio()
+{	
+	StartRhythmLesson(LessonNotes, bpmSet);
+}
+
+void ALessonTemplate::SetNoteMarks(FString Notes)
+{
+	LessonNotes = Notes;
+	int arrayLength = Notes.Len();
 	float SizeLeft = 1;
 	NoteValuesArray.resize(arrayLength);
+
+	MaxLessonScore = arrayLength * 100;
 
 	for (int i = 0; i < arrayLength; i++)
 	{

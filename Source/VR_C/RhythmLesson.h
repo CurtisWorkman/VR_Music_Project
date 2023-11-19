@@ -23,7 +23,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SpawnNoteMeshes(char Notes[]);
+	void SpawnNoteMeshes(FString Notes);
 	void ChangeNoteColour(int NoteNum, int Score);
 	int BPM;
 

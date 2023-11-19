@@ -71,8 +71,6 @@ private:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Cursor;
 
-	TSubclassOf<class UUserWidget> LessonMenuWidgetClass;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputMappingContext* MenuMappingContext;
 

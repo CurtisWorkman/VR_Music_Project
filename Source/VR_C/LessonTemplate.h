@@ -12,6 +12,7 @@
 
 DECLARE_DELEGATE_OneParam(FOnLessonEndDelegate, int);
 DECLARE_DELEGATE(FOnIncrementState);
+DECLARE_DELEGATE(FOnEndlessonEndDelegate);
 
 USTRUCT()
 struct FLessonDetails				//edited in lesson template sub classes
@@ -49,7 +50,7 @@ protected:
 
 	
 
-	void StartRhythmLesson(char Notes[], int bpm);
+	void StartRhythmLesson(FString Notes, int bpm);
 
 	void EndLesson();
 
@@ -57,7 +58,9 @@ protected:
 	ADrum* DrumRef;
 
 	FOnIncrementState OnIncrementState;
+	FOnEndlessonEndDelegate OnEndlessLessonEnd;
 
+	bool bEndless = false;
 
 public:	
 	// Called every frame
@@ -83,9 +86,15 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ADrum> Drum;
 
+	UPROPERTY(EditAnywhere)
+		class USoundBase* TryAgainAudio;
+
+	UPROPERTY(EditAnywhere)
+		class USoundBase* WellDoneAudio;
+
 	class ULessonDetailsWidget* LessonDetailsWidgetRef;
 
-	void StartTextToSpeech(const FText& Text);
+	void StartTextToSpeech();
 	void SetTextToSpeechComponent(USoundBase* TextSound);
 	void SpawnRhythmLessonBar();
 	void SpawnDrum();
@@ -98,22 +107,32 @@ private:
 
 	void IncrementState();
 
+	void StartLessonTryAgainAudio();
+
+	UFUNCTION()
+	void FinLessonTryAgainAudio();
+
+
 //	void SetNoteValuesArray(std::vector<float> NoteValuesArray);
 //	void GetNoteValuesArray();
 
 	std::vector<float> NoteValuesArray;
 
-	void SetNoteMarks(char Notes[]);
+	void SetNoteMarks(FString Notes);
 
 	FTimerHandle LessonTimerHandle;
 	FTimerHandle TickTimerHandle;
 
 	int numberOfPreTicks = 4;
 	int Ticks = 4;
-	int TotalScore = 0;
 	float TimeBetweenTick;
 	float bpmSet;
+
+	FString LessonNotes;
 //	char lessonNotes [];
 
 //	float Score;
+
+	int MaxLessonScore;
+	int LessonScore;
 };

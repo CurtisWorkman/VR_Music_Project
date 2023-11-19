@@ -22,16 +22,11 @@ ALessonMenu::ALessonMenu()
 	LessonMenuWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("Lesson Menu Widget"));
 	LessonMenuWidgetComp->SetupAttachment(RootComp);
 
-	MenuLaser = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Menu Laser"));
-	MenuLaser->SetupAttachment(RootComp);
-
-	Cursor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cursor"));
+	Cursor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CursorComp"));
 	Cursor->SetupAttachment(LessonMenuWidgetComp);
 
-	ConstructorHelpers::FClassFinder<UUserWidget> LessonMenuWidgetClassBP(TEXT("/Game/UI/WBP_LessonMenuWidget"));
-	if (!ensure(LessonMenuWidgetClassBP.Class != nullptr)) return;
-
-	LessonMenuWidgetClass = LessonMenuWidgetClassBP.Class;
+	MenuLaser = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Menu Laser"));
+	MenuLaser->SetupAttachment(RootComp);
 
 }
 
@@ -134,7 +129,6 @@ void ALessonMenu::StartLesson(uint32 Index)
 
 void ALessonMenu::EndLesson(int NewScore)
 {
-	UE_LOG(LogTemp, Warning, TEXT("end lesson"));
 	ULessonMenuWidget* LessonMenuWidget = Cast<ULessonMenuWidget>(LessonMenuWidgetComp->GetUserWidgetObject());
 	LessonMenuWidget->AddScoreToCurrentLesson(NewScore);
 	LessonMenuWidgetComp->SetVisibility(true);

@@ -20,6 +20,8 @@ public:
 	void SetLessonScore(const FText& LessonScore);
 	void SetLessonText(const FText& LessonText);
 
+	int GetLessonScore();
+
 private:
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* LessonName;
@@ -29,5 +31,7 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 		class UTextBlock* LessonText;
+
+	FString RemoveNonNumeric(FString Input);
 	
 };
