@@ -31,8 +31,8 @@ GeneratedNotes AEndlessLesson::GenerateNotes()
 	GeneratedNotes.Tempo = RandTempo;
 
     // Define note lengths and their corresponding durations in 4/4 time signature
-    TArray<FString> noteLengths = { "C", "Q", "S", "M", "TTT" };
-    std::vector<double> durations = { 1, 0.5, 4, 2, 1 };
+    TArray<FString> noteLengths = { "C", "Q", "S", "M" };                   //add triplet in later
+    std::vector<double> durations = { 1, 0.5, 4, 2 };
 
     // Initialize the total duration of the bar
     double totalDuration = 4;
@@ -63,5 +63,5 @@ GeneratedNotes AEndlessLesson::GenerateNotes()
 void AEndlessLesson::StartNewLesson()
 {
 	GeneratedNotes GeneratedNotes = GenerateNotes();
-	StartRhythmLesson(FString(TEXT("CCCC")), GeneratedNotes.Tempo);
+	StartRhythmLesson(GeneratedNotes.GeneratedNotesString, GeneratedNotes.Tempo);
 }

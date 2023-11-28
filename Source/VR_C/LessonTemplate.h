@@ -62,6 +62,9 @@ protected:
 
 	bool bEndless = false;
 
+	void SpawnRhythmLessonBar();
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -96,7 +99,7 @@ private:
 
 	void StartTextToSpeech();
 	void SetTextToSpeechComponent(USoundBase* TextSound);
-	void SpawnRhythmLessonBar();
+
 	void SpawnDrum();
 
 	void RegisterHit();
@@ -123,7 +126,7 @@ private:
 	FTimerHandle LessonTimerHandle;
 	FTimerHandle TickTimerHandle;
 
-	int numberOfPreTicks = 4;
+	int numberOfPreTicks = 3;
 	int Ticks = 4;
 	float TimeBetweenTick;
 	float bpmSet;

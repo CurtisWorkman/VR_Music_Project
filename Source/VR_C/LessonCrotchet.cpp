@@ -5,13 +5,13 @@
 
 ALessonCrotchet::ALessonCrotchet() : ALessonTemplate()
 {
-	LessonDetails.LessonName = TEXT("Lesson Crotchet");
+	LessonDetails.LessonName = TEXT("The Crotchet");
 }
 
 void ALessonCrotchet::BeginPlay()
 {
 	Super::BeginPlay();
-	SetLessonName(FText::FromString(TEXT("Lesson Crotchet")));
+	SetLessonName(FText::FromString(TEXT("The Crotchet")));
 	AddToScore(0);
 	OnIncrementState.BindUObject(this, &ALessonCrotchet::IncrementState);
 	IncrementState();

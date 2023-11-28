@@ -2,7 +2,6 @@
 
 
 #include "LessonTemplate.h"
-#include "TextToSpeechEngineSubsystem.h"
 #include "Components/WidgetComponent.h"
 #include "LessonDetailsWidget.h"
 
@@ -24,6 +23,8 @@ ALessonTemplate::ALessonTemplate()
 	LessonTextToSpeech = CreateDefaultSubobject<UAudioComponent>(TEXT("LessonTextToSpeech"));
 	LessonTextToSpeech->SetupAttachment(RootComponent);
 
+	LessonMetronome->bAutoActivate = false;
+
 }
 
 // Called when the game starts or when spawned
@@ -32,7 +33,12 @@ void ALessonTemplate::BeginPlay()
 	Super::BeginPlay();
 
 	SpawnDrum();
-	
+
+	if (DrumRef == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NULLDRUM"));
+		return;
+	}
 	DrumRef->OnHitDel.BindUObject(this, &ALessonTemplate::RegisterHit);
 
 	LessonDetailsWidgetRef = Cast<ULessonDetailsWidget>(LessonWidget->GetWidget());
@@ -62,7 +68,10 @@ void ALessonTemplate::SetLessonName(const FText& Text)
 
 void ALessonTemplate::SetTextToSpeechComponent(USoundBase* TextSound)
 {
-	LessonTextToSpeech->SetSound(TextSound);
+	if (TextSound != nullptr)
+	{
+		LessonTextToSpeech->SetSound(TextSound);
+	}
 }
 
 void ALessonTemplate::StartRhythmLesson(FString Notes, int bpm)
@@ -76,7 +85,7 @@ void ALessonTemplate::StartRhythmLesson(FString Notes, int bpm)
 		RhythmLessonBarRef->SpawnNoteMeshes(Notes);
 		bpmSet = bpm;
 		TimeBetweenTick = 1.0 / (bpmSet / 60);
-		numberOfPreTicks = 4;
+		numberOfPreTicks = 3;
 		SetNoteMarks(Notes);
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayPreTick, TimeBetweenTick, false);
 		
@@ -142,7 +151,8 @@ void ALessonTemplate::RegisterHit()
 		float TimeThrough = GetWorld()->GetTimerManager().GetTimerElapsed(LessonTimerHandle);
 		UE_LOG(LogTemp, Warning, TEXT("Time Through %f"), TimeThrough);
 		//percent of the way through
-		float PercentThrough = TimeThrough / (4.0 / (bpmSet / 60));
+		float PercentThrough = (TimeThrough / (5.0 / (bpmSet / 60)));		//added -0.2 and changed from 4 to 5, 1 fifth of the percent through as adding pre tick
+		PercentThrough = (1 - PercentThrough) * (-0.25) + PercentThrough;		//Linear interpolation from 0 - 1 to -0.25 to 1
 		UE_LOG(LogTemp, Warning, TEXT("Percentthrough %f"), PercentThrough);
 		//find closest to percentthrough
 		float closestNum = 1;
@@ -211,15 +221,16 @@ void ALessonTemplate::PlayPreTick()
 		//Start LessonTimer		Should timer start tick before?
 		LessonMetronome->Play();
 		//do something to signify start
-		GetWorld()->GetTimerManager().SetTimer(LessonTimerHandle, this, &ALessonTemplate::LessonComplete, 4 / (bpmSet / 60), false);
+		//Change to 5
+		GetWorld()->GetTimerManager().SetTimer(LessonTimerHandle, this, &ALessonTemplate::LessonComplete, 5 / (bpmSet / 60), false);
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayTick, TimeBetweenTick, false);
 	}
 }
 
 void ALessonTemplate::PlayTick()
 {
-
-	if (Ticks - 1 > 0)
+	//Change to 1
+	if (Ticks  > 0)
 	{
 		LessonMetronome->Play();
 		GetWorld()->GetTimerManager().SetTimer(TickTimerHandle, this, &ALessonTemplate::PlayTick, TimeBetweenTick, false);

@@ -4,6 +4,7 @@
 #include "RhythmLesson.h"
 #include "Components/AudioComponent.h"
 #include "Drum.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 ARhythmLesson::ARhythmLesson()
@@ -16,9 +17,6 @@ ARhythmLesson::ARhythmLesson()
 
 	SheetMusicBarStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SheetBar"));
 	SheetMusicBarStaticMesh->SetupAttachment(RootComponent);
-
-	TickComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioTickComp"));
-	TickComponent->SetupAttachment(RootComponent);
 
 }
 
@@ -113,6 +111,7 @@ void ARhythmLesson::ChangeNoteColour(int NoteNum, int Score)
 		break;
 	}
 	MatToChange->SetVectorParameterValue(TEXT("Base Colour"), ColourToChangeTo);
+	SpawnNiagaraSystem(NoteToChange, ColourToChangeTo);
 
 }
 
@@ -132,11 +131,22 @@ void ARhythmLesson::AddMusicNote(UStaticMesh* NoteToAdd, float SizeLeft, float M
 		NewNote->SetMaterial(0, NoteMaterial);
 		
 		//Move notes to their correct positions. Depending on the note - take up a percentage of the space of the bar. A variable for space taken up
-		NewNote->SetRelativeLocation(FVector(0, -SizeLeft + AddedOffset, 0));
+		NewNote->SetRelativeLocation(FVector(0, -SizeLeft + AddedOffset, 3));
 		NewNote->SetRelativeRotation(FRotator(90, 0, 180));
 
 		//Make array of references to be accessed anc colour changed.
 		ArrayOfMeshes[noteNum] = NewNote;
+	}
+}
+
+void ARhythmLesson::SpawnNiagaraSystem(UStaticMeshComponent* Note, FVector4 Color)
+{
+	if (HitParticles) 
+	{
+		// This spawns the chosen effect on the owning WeaponMuzzle SceneComponent
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAttached(HitParticles, Note, NAME_None, FVector(0.f), FRotator(0.f), EAttachLocation::Type::KeepRelativeOffset, true);
+		// Parameters can be set like this (see documentation for further info) - the names and type must match the user exposed parameter in the Niagara System
+		NiagaraComp->SetNiagaraVariableLinearColor(FString("Colour"), FLinearColor(Color * 255));
 	}
 }
 

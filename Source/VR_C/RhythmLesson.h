@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "NiagaraComponent.h"
 #include "RhythmLesson.generated.h"
 
 UCLASS()
@@ -53,11 +54,13 @@ private:
 	UPROPERTY(EditAnywhere)
 		UMaterial* NoteMaterial;
 
-	UPROPERTY(EditAnywhere)
-	class UAudioComponent* TickComponent;
-
 	void AddMusicNote(UStaticMesh* NoteToAdd, float SizeLeft, float MaxLength, int noteNum);
 
+	void SpawnNiagaraSystem(UStaticMeshComponent* Note, FVector4 Color);
+
 	std::vector<UStaticMeshComponent*> ArrayOfMeshes;
+
+	UPROPERTY(EditAnywhere)
+		UNiagaraSystem* HitParticles;
 
 };

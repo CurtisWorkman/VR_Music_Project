@@ -13,6 +13,9 @@ ADrumstick::ADrumstick()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	RootComponent = StaticMesh;
 
+	DrumstickHitArea = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hit Area"));
+	DrumstickHitArea->SetupAttachment(StaticMesh);
+
 	HitterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hit Mesh"));
 	HitterMesh->SetupAttachment(StaticMesh);
 
@@ -27,29 +30,55 @@ ADrumstick::ADrumstick()
 void ADrumstick::BeginPlay()
 {
 	Super::BeginPlay();
-	StaticMesh->OnComponentHit.AddDynamic(this, &ADrumstick::OnHit);
+//	StaticMesh->OnComponentHit.AddDynamic(this, &ADrumstick::OnHit);
 	
+	DrumstickHitArea->OnComponentBeginOverlap.AddDynamic(this, &ADrumstick::OnHit);
+	DrumstickHitArea->OnComponentEndOverlap.AddDynamic(this, &ADrumstick::EndHit);
+
 }
 
 // Called every frame
 void ADrumstick::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 float ADrumstick::GetHitterSpeed()
 {
-	return HitterMesh->GetComponentVelocity().Length();
+	float DownwardVel = HitterMesh->GetComponentVelocity().Z;
+	UE_LOG(LogTemp, Warning, TEXT("Downward vel %f"), DownwardVel);
+	return HitterMesh->GetComponentVelocity().Z;
 }
 
-void ADrumstick::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void ADrumstick::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	ADrumstick* OtherStick = Cast<ADrumstick>(OtherActor);
 	if (OtherStick != nullptr)
 	{
 		AudioHitComp->Play();
 		PlayHapticEffectOnController(OnHitStickHapticEffect);
+	}
+}
+
+void ADrumstick::EndHit(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	ADrumstick* OtherStick = Cast<ADrumstick>(OtherActor);
+	if (OtherStick != nullptr)
+	{
+		StopHapticEffectOnController();
+	}
+}
+
+void ADrumstick::StopHapticEffectOnController()
+{
+	if (GetIsHeld())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayHaptic"));
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PlayerController != nullptr)
+		{
+			PlayerController->StopHapticEffect(GrabComponent->GetHeldByHand());
+		}
 	}
 }
 
@@ -71,7 +100,7 @@ void ADrumstick::PlayHapticEffectOnController(UHapticFeedbackEffect_Base* HitEff
 	
 	if (GetIsHeld())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayHaptic"));
+//		UE_LOG(LogTemp, Warning, TEXT("PlayHaptic"));
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		if (PlayerController != nullptr && HitEffect != nullptr)
 		{

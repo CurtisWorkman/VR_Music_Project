@@ -24,6 +24,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+		USceneComponent* RootComp;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* StaticMesh;
+
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* AudioHitComp;
+	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -31,14 +41,12 @@ public:
 	FOnHitDelegate OnHitDel;
 
 private:
-	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* StaticMesh;
+
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* HitArea;
 //	UPROPERTY(EditAnywhere)
 //		UBoxComponent* HitComp;
-	UPROPERTY(EditAnywhere)
-		UAudioComponent* AudioHitComp;
+
 
 	UFUNCTION()
 		void HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -48,6 +56,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		UHapticFeedbackEffect_Base* OnHitDrumHapticEffect;
+
+	FTimerHandle HitTimerHandle;
+
+	void ResetHitAllowed();
+
+	bool bIsHitAllowed = true;
 };
 
 

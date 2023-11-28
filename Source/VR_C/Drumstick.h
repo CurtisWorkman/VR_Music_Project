@@ -37,6 +37,8 @@ private:
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* HitterMesh;
 	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* DrumstickHitArea;
+	UPROPERTY(EditAnywhere)
 		UGrabComponent* GrabComponent;
 
 	UPROPERTY(EditAnywhere)
@@ -46,7 +48,12 @@ private:
 
 	
 	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	void OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void EndHit(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void StopHapticEffectOnController();
 
 	bool GetIsHeld();
 };

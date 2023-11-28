@@ -18,7 +18,6 @@ ULessonMenuWidget::ULessonMenuWidget(const FObjectInitializer& ObjectInitializer
 	if (!ensure(LessonRowBPClass.Class != nullptr)) return;
 
 	LessonRowClass = LessonRowBPClass.Class;
-
 }
 
 bool ULessonMenuWidget::Initialize()
