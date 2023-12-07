@@ -24,6 +24,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual int RegisterHit(class ADrumstick* DrumstickRef);
+
 	UPROPERTY(EditAnywhere)
 		USceneComponent* RootComp;
 
@@ -33,6 +35,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 		UAudioComponent* AudioHitComp;
 	
+	float MaxSpeed = 500;
 
 public:	
 	// Called every frame
@@ -47,9 +50,6 @@ private:
 //	UPROPERTY(EditAnywhere)
 //		UBoxComponent* HitComp;
 
-
-	UFUNCTION()
-		void HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	UFUNCTION()
 		void OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

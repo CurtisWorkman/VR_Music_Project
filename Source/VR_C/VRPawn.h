@@ -72,6 +72,8 @@ private:
 	USceneComponent* VROriginComponent;
 	UMotionControllerComponent* MC_LeftComponent;
 	UMotionControllerComponent* MC_RightComponent;
+	USkeletalMeshComponent* HandLeft;
+
 
 	AMenu* MenuActor;
 

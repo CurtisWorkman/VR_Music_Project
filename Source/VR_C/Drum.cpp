@@ -23,6 +23,7 @@ ADrum::ADrum()
 	AudioHitComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Hit Sound"));
 	AudioHitComp->SetupAttachment(StaticMesh);
 	
+	AudioHitComp->bCanPlayMultipleInstances = true;
 
 }
 
@@ -30,9 +31,30 @@ ADrum::ADrum()
 void ADrum::BeginPlay()
 {
 	Super::BeginPlay();
-	StaticMesh->OnComponentHit.AddDynamic(this, &ADrum::HitMesh);
 	HitArea->OnComponentBeginOverlap.AddDynamic(this, &ADrum::OverlapBegin);
 	
+}
+
+int ADrum::RegisterHit(class ADrumstick* DrumstickRef)
+{
+	//play sound
+	float Speed = -DrumstickRef->GetHitterSpeed();
+	if (Speed > MaxSpeed)
+	{
+		Speed = MaxSpeed;
+	}
+	else if (Speed < 0)
+	{
+		return 0;
+	}
+	AudioHitComp->VolumeMultiplier = Speed * Speed / 25000 * 7;
+	AudioHitComp->Play();
+
+	//Take Velocity into account and change effect amplitude
+	DrumstickRef->PlayHapticEffectOnController(OnHitDrumHapticEffect);
+	OnHitDel.ExecuteIfBound();
+	bIsHitAllowed = false;
+	return Speed;
 }
 
 // Called every frame
@@ -42,10 +64,6 @@ void ADrum::Tick(float DeltaTime)
 
 }
 
-void ADrum::HitMesh(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-//	UE_LOG(LogTemp, Warning, TEXT("Hit"));
-}
 
 void ADrum::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -53,28 +71,8 @@ void ADrum::OverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* Other
 		ADrumstick* Drumstick = Cast<ADrumstick>(OtherActor);
 		if (Hitter != nullptr)
 		{
-				//play sound
-				float Speed = -Drumstick->GetHitterSpeed();
-				//		UE_LOG(LogTemp, Warning, TEXT("Velocity %f"), Speed);
-				if (Speed > 500)
-				{
-					Speed = 500;
-				}
-				else if (Speed < 0)
-				{
-					return;
-				}
-				AudioHitComp->VolumeMultiplier = Speed * Speed / 25000 * 7;
-				AudioHitComp->Play();
-
-				//Take Velocity into account and change effect amplitude
-				Drumstick->PlayHapticEffectOnController(OnHitDrumHapticEffect);
-				OnHitDel.ExecuteIfBound();
-				bIsHitAllowed = false;
-		
+			RegisterHit(Drumstick);						
 		}
-
-
 }
 
 void ADrum::ResetHitAllowed()

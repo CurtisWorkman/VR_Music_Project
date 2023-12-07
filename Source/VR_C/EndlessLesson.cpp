@@ -2,7 +2,7 @@
 
 
 #include "EndlessLesson.h"
-
+#include "LessonDetailsWidget.h"
 
 
 AEndlessLesson::AEndlessLesson()
@@ -14,6 +14,7 @@ void AEndlessLesson::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLessonName(FText::FromString(TEXT("Endless")));
+    LessonDetailsWidgetRef->SetLessonText(FText::FromString(TEXT("")));
 	AddToScore(0);
 	bEndless = true;
 

@@ -129,6 +129,11 @@ bool UGrabComponent::TryRelease(UMotionControllerComponent* MotionController)
 			PhysicsConstraint->BreakConstraint();
 			bIsHeld = false;
 		}	
+		if (SimulateOnDrop == false)
+		{
+			SetPrimitiveComponentPhysics(false, Parent);
+			UE_LOG(LogTemp, Warning, TEXT("unphys"))
+		}
 		break;
 	}
 	if (bIsHeld)

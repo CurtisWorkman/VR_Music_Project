@@ -6,6 +6,7 @@
 #include "Drum.h"
 #include "Components/WidgetInteractionComponent.h"
 #include "MotionControllerComponent.h"
+#include "Components/TimelineComponent.h"
 #include "ExpressionPad.generated.h"
 
 /**
@@ -30,6 +31,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual int RegisterHit(class ADrumstick* DrumstickRef) override;
+
 	
 private:
 	UPROPERTY(EditAnywhere)
@@ -46,6 +49,9 @@ private:
 
 	UFUNCTION()
 		void OnHandAreaOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION()
+		void DoCurveTick();
 
 	void SetWidgetInteractionReferences();
 	void SetMotionControllerReference();
@@ -72,6 +78,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* MenuInteractRight;
 
+	UPROPERTY(EditAnywhere)
+		class UCurveLinearColor* ColourCurveReal;
+
 	bool bActiveMenuHandRight = false;
 	bool bDoOnceEnableVis = true;
 	bool bDoOnceDisableVis = true;
@@ -81,4 +90,12 @@ private:
 	UMotionControllerComponent* MotionControllerAimRef;
 
 	UWidgetInteractionComponent* GetWidgetInteractionComponent(bool bActiveMenuRight);
+
+	UMaterialInstanceDynamic* MatToChange;
+
+	float TimelineValue;
+	float TimeLineLength;
+	FTimeline ColourTimeline;
+
+	bool bMenuOpen = false;
 };

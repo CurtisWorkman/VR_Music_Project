@@ -64,6 +64,8 @@ protected:
 
 	void SpawnRhythmLessonBar();
 
+	class ULessonDetailsWidget* LessonDetailsWidgetRef;
+
 
 public:	
 	// Called every frame
@@ -95,7 +97,7 @@ private:
 	UPROPERTY(EditAnywhere)
 		class USoundBase* WellDoneAudio;
 
-	class ULessonDetailsWidget* LessonDetailsWidgetRef;
+	
 
 	void StartTextToSpeech();
 	void SetTextToSpeechComponent(USoundBase* TextSound);

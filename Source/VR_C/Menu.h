@@ -67,7 +67,6 @@ private:
 	UFUNCTION()
 		void FinCurve();
 
-	float CurveFloatValue;
 	float TimelineValue;
 	FTimeline MyTimeline;
 

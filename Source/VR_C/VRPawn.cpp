@@ -42,6 +42,7 @@ void AVRPawn::BeginPlay()
 		VROriginComponent = Cast<USceneComponent>(GetDefaultSubobjectByName(TEXT("VROrigin")));
 		MC_LeftComponent = Cast<UMotionControllerComponent>(GetDefaultSubobjectByName(TEXT("MC_Left")));
 		MC_RightComponent = Cast<UMotionControllerComponent>(GetDefaultSubobjectByName(TEXT("MC_Right")));
+		HandLeft = Cast<USkeletalMeshComponent>(GetDefaultSubobjectByName(TEXT("HandLeft")));
 	}
 	InitializeCapsulePosition();
 }
@@ -105,6 +106,7 @@ void AVRPawn::GrabLeft(const FInputActionValue& Value)
 		if (GrabComponent->TryGrab(MC_LeftComponent))
 		{
 			HeldComponentLeft = GrabComponent;
+			HandLeft->ComponentTags.Remove(FName("ExpressionPadInteractor"));
 //			if (HeldComponentLeft == HeldComponentRight)
 //			{
 	//			HeldComponentRight = nullptr;
@@ -120,6 +122,7 @@ void AVRPawn::ReleaseLeft(const FInputActionValue& Value)
 		if (HeldComponentLeft->TryRelease(MC_LeftComponent))
 		{
 			HeldComponentLeft = nullptr;
+			HandLeft->ComponentTags.Add(FName("ExpressionPadInteractor"));
 		}
 	}
 }
