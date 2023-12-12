@@ -97,8 +97,15 @@ void ALessonTemplate::EndLesson()
 {
 	int TotalScore = LessonDetailsWidgetRef->GetLessonScore();
 	OnLessonEnd.ExecuteIfBound(TotalScore);
-	RhythmLessonBarRef->Destroy();
-	DrumRef->Destroy();
+	if (RhythmLessonBarRef != nullptr)
+	{
+	//	RhythmLessonBarRef->Destroy();
+	}
+	if (DrumRef != nullptr)
+	{
+		DrumRef->Destroy();
+	}
+	
 	Destroy();
 }
 
@@ -133,7 +140,7 @@ void ALessonTemplate::SpawnRhythmLessonBar()
 void ALessonTemplate::SpawnDrum()
 {
 	if (Drum == nullptr) return;
-	FVector Location = this->GetActorLocation() +FVector(0, 0, -100);
+	FVector Location = this->GetActorLocation() +FVector(0, 0, -70);
 	FRotator Rotation = this->GetActorRotation();
 	FVector TransformScale(1, 1, 1);
 	FActorSpawnParameters SpawnInfo;
