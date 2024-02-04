@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+
 #include "VR_CGameModeBase.generated.h"
 
 /**
@@ -14,4 +15,8 @@ class VR_C_API AVR_CGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	class AInstrumentArea* StoredInstrument = nullptr;
+	void StorePlayingInstrument(class AInstrumentArea* Instrument);
+	class AInstrumentArea* GetStoredPlayingInstrument();
 };

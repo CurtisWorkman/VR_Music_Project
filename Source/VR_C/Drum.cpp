@@ -24,6 +24,7 @@ ADrum::ADrum()
 	AudioHitComp->SetupAttachment(StaticMesh);
 	
 	AudioHitComp->bCanPlayMultipleInstances = true;
+	AudioHitComp->bAutoActivate = false;
 
 }
 
@@ -38,7 +39,10 @@ void ADrum::BeginPlay()
 int ADrum::RegisterHit(class ADrumstick* DrumstickRef)
 {
 	//play sound
-	float Speed = -DrumstickRef->GetHitterSpeed();
+	UE_LOG(LogTemp, Warning, TEXT("speed %s"), *DrumstickRef->GetHitterSpeed().ToString());
+	float Speed = -FVector::DotProduct(DrumstickRef->GetHitterSpeed(), HitArea->GetUpVector());
+	UE_LOG(LogTemp, Warning, TEXT("speed %f"), Speed);
+	
 	if (Speed > MaxSpeed)
 	{
 		Speed = MaxSpeed;

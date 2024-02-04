@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "LessonDetailsWidget.generated.h"
-
 /**
  * 
  */
@@ -15,7 +14,6 @@ class VR_C_API ULessonDetailsWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-
 	void SetLessonName(const FText& LessonName);
 	void SetLessonScore(const FText& LessonScore);
 	void SetLessonText(const FText& LessonText);

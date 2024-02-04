@@ -28,7 +28,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	float GetHitterSpeed();
+	FVector GetHitterSpeed();
 	void PlayHapticEffectOnController(UHapticFeedbackEffect_Base* HitEffect);
 
 private:

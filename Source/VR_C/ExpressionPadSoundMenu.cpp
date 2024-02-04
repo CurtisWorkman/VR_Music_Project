@@ -45,10 +45,9 @@ void UExpressionPadSoundMenu::SelectSound()
 
 void UExpressionPadSoundMenu::AddSoundRow(uint32 Index, FString SoundName)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Add"));
 	if (SoundMenuRowClass != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("not null"))
+//		UE_LOG(LogTemp, Warning, TEXT("not null"))
 		UExpressionPadSoundMenuRow* Row = CreateWidget<UExpressionPadSoundMenuRow>(this, SoundMenuRowClass);
 		Row->SoundName->SetText(FText::FromString(SoundName));
 		Row->Setup(this, Index);

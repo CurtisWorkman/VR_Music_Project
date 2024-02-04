@@ -6,8 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "NiagaraDataInterfaceArrayFunctionLibrary.h"
-#include "EnhancedInputComponent.h"
-#include "VRPawn.h"
+//#include "VRPawn.h"
 
 // Sets default values
 AMenu::AMenu()
@@ -56,7 +55,8 @@ void AMenu::BeginPlay()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-				Subsystem->AddMappingContext(MenuMappingContext, 2);	
+				Subsystem->AddMappingContext(MenuMappingContext, 2);
+				UE_LOG(LogTemp, Warning, TEXT("add menu map"))
 		}
 	}
 
@@ -65,7 +65,6 @@ void AMenu::BeginPlay()
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerController->InputComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Input Setup"));
 		EnhancedInputComponent->BindAction(MenuInteractRight, ETriggerEvent::Started, this, &AMenu::OnStartInteractRight);
 		EnhancedInputComponent->BindAction(MenuInteractRight, ETriggerEvent::Completed, this, &AMenu::OnCompleteInteractRight);
 	}

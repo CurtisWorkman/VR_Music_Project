@@ -70,7 +70,7 @@ void ULessonMenuWidget::StartLesson()
 		UE_LOG(LogTemp, Warning, TEXT("startclick index %d"), SelectedIndex.GetValue());
 		if (MenuRef != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("not null"));
+//			UE_LOG(LogTemp, Warning, TEXT("not null"));
 			MenuRef->StartLesson(SelectedIndex.GetValue());
 		}
 		

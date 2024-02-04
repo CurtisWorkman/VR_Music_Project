@@ -43,11 +43,9 @@ void ADrumstick::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-float ADrumstick::GetHitterSpeed()
+FVector ADrumstick::GetHitterSpeed()
 {
-	float DownwardVel = HitterMesh->GetComponentVelocity().Z;
-	UE_LOG(LogTemp, Warning, TEXT("Downward vel %f"), DownwardVel);
-	return HitterMesh->GetComponentVelocity().Z;
+	return HitterMesh->GetComponentVelocity();
 }
 
 void ADrumstick::OnHit(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
