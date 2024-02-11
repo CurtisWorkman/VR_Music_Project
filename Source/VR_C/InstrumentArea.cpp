@@ -30,6 +30,9 @@ AInstrumentArea::AInstrumentArea() : AActor()
 	TextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("Text"));
 	TextComponent->SetupAttachment(StaticMesh);
 
+	EarthComp = CreateDefaultSubobject<UChildActorComponent>(TEXT("Earth Component"));
+	EarthComp->SetupAttachment(StaticMesh);
+
 	TextSound = CreateDefaultSubobject<UAudioComponent>(TEXT("Instrument Information"));
 	TextSound->SetupAttachment(StaticMesh);
 
@@ -80,8 +83,13 @@ void AInstrumentArea::StartLesson()
 			DialogueIndex = -1;
 			IterateDialogue();
 
-			Earth = GetWorld()->SpawnActor<AEarth>(EarthSpawnPoint->GetComponentLocation(), EarthSpawnPoint->GetComponentRotation());
-			Earth->EarthMove(CountryRotation);
+			EarthComp->SetHiddenInGame(false);
+			Earth = Cast<AEarth>(EarthComp->GetChildActor());
+			if (Earth != nullptr)
+			{
+				Earth->EarthMove(FString(TEXT("Spain")));
+			}
+			
 		}
 	}
 
@@ -119,9 +127,9 @@ void AInstrumentArea::EndLessonEarly()
 {
 	TextComponent->SetText(FText::FromString(""));
 	TextSound->Stop();
-	if (Earth != nullptr)
+	if (EarthComp != nullptr)
 	{
-		Earth->Destroy();
+//		EarthComp->Destroy();
 	}	
 }
 

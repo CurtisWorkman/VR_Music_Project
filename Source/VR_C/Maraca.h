@@ -4,19 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/TimelineComponent.h"
-#include "Earth.generated.h"
+#include "Maraca.generated.h"
 
 UCLASS()
-class VR_C_API AEarth : public AActor
+class VR_C_API AMaraca : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AEarth();
-
-	void EarthMove(FString InSelectedCountryStr);
+	AMaraca();
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,22 +29,26 @@ private:
 		USceneComponent* RootComp;
 
 	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* StaticMeshComponent;
-
-	UMaterialInstanceDynamic* MatToChange;
-
-	UFUNCTION()
-	void DoCurveTick();
-
-	
+		USceneComponent* SpeedMeasurePoint;
 
 	UPROPERTY(EditAnywhere)
-	class UCurveFloat* EarthCurve;
+		UStaticMeshComponent* BaseMesh;
 
-	float TimelineValue;
-	float TimeLineLength;
-	FTimeline CurveTimeline;
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* InstrumentSound;
 
-	FRotator RotationToCountry;
-	FRotator StartingRotation;
+	UPROPERTY(EditAnywhere)
+		class UGrabComponent* GrabComponent;
+
+	UPROPERTY(EditAnywhere)
+		UHapticFeedbackEffect_Base* OnHitStickHapticEffect;
+
+	FVector CurrentSpeed;
+	FVector OldSpeed;
+
+	float MaxSpeed = 100;
+
+	bool GetIsHeld();
+
+	void PlayHapticEffectOnController(UHapticFeedbackEffect_Base* HitEffect);
 };

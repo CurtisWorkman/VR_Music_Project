@@ -55,17 +55,25 @@ void ACastanet::Tick(float DeltaTime)
 
 void ACastanet::OnGrabbed()
 {
-	EControllerHand Controller = GrabComponent->GetHeldByHand();
-	switch (Controller) 
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
 	{
-	case EControllerHand::Left:
-		AddMappingContext(IMCCastanetLeft);
-		break;
-	case EControllerHand::Right:
-		AddMappingContext(IMCCastanetRight);
-		break;
-	default:
-		break;
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			EControllerHand Controller = GrabComponent->GetHeldByHand();
+			switch (Controller)
+			{
+			case EControllerHand::Left:
+
+				Subsystem->AddMappingContext(IMCCastanetLeft, 0);
+				break;
+			case EControllerHand::Right:
+				Subsystem->AddMappingContext(IMCCastanetRight, 0);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }
 

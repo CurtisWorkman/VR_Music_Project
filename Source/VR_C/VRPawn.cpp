@@ -35,7 +35,7 @@ void AVRPawn::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-			Subsystem->AddMappingContext(AnimationMappingContext, 5);
+			Subsystem->AddMappingContext(AnimationMappingContext, 0);
 		}
 		CameraComponent = Cast<UCameraComponent>(GetDefaultSubobjectByName(TEXT("Camera")));
 		CapsuleComponent = Cast<UCapsuleComponent>(GetDefaultSubobjectByName(TEXT("CollisionCylinder")));
@@ -75,7 +75,7 @@ void AVRPawn::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
-
+	UE_LOG(LogTemp, Warning, TEXT("Move"))
 	if (Controller != nullptr && CameraComponent != nullptr)
 	{
 		// add movement 		

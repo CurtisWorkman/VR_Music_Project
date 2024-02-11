@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 		TArray<USoundBase*> DialogueSound;
 
+	UPROPERTY(EditAnywhere)
+		UChildActorComponent* EarthComp;
+
 	virtual void BeginPlay() override;
 
 private:

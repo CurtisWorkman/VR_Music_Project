@@ -46,11 +46,26 @@ void AEarth::Tick(float DeltaTime)
 
 }
 
-void AEarth::EarthMove(FRotator CountryRotation)
+void AEarth::EarthMove(FString InSelectedCountryStr)
 {
-	StartingRotation = RootComp->GetComponentRotation();
-	RotationToCountry = CountryRotation;
+	StartingRotation = StaticMeshComponent->GetComponentRotation();
+
+	int SelectedCountryInt = 0;
+	if (InSelectedCountryStr == TEXT("Spain"))
+	{
+		SelectedCountryInt = 0;
+		RotationToCountry = FRotator(0, 0, 90);
+	}
+	else if (InSelectedCountryStr == TEXT("China"))
+	{
+		SelectedCountryInt = 1;
+		RotationToCountry = FRotator(0, 0, 90);
+	}
+
+	MatToChange->SetScalarParameterValue(TEXT("SelectedCountry"), SelectedCountryInt);
+
 	CurveTimeline.PlayFromStart();	
+
 }
 
 void AEarth::DoCurveTick()
