@@ -10,6 +10,7 @@
 #include "VR_CGameModeBase.h"
 
 #include "Earth.h"
+#include "RoomSphere.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -87,7 +88,12 @@ void AInstrumentArea::StartLesson()
 			Earth = Cast<AEarth>(EarthComp->GetChildActor());
 			if (Earth != nullptr)
 			{
-				Earth->EarthMove(FString(TEXT("Spain")));
+				Earth->EarthMove(CountryString);
+				
+			}
+			if (RoomSphereRef != nullptr)
+			{
+				RoomSphereRef->ChangeRoomTexture(CountryString);
 			}
 			
 		}

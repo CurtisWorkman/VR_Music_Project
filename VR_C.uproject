@@ -11,7 +11,6 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"UMG"
-				
 			]
 		}
 	],
@@ -32,6 +31,10 @@
 				"Android",
 				"HoloLens"
 			]
+		},
+		{
+			"Name": "ElectraPlayer",
+			"Enabled": true
 		}
 	]
 }

@@ -11,16 +11,22 @@
 ACastanet::ACastanet()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	RootComponent = StaticMesh;
+	PhysicsStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Physics Static Mesh"));
+	RootComponent = PhysicsStaticMesh;
+
+	TopStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Top Static Mesh"));
+	TopStaticMesh->SetupAttachment(PhysicsStaticMesh);
+
+	BottomStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Bottom Static Mesh"));
+	BottomStaticMesh->SetupAttachment(PhysicsStaticMesh);
 
 	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Sound"));
-	AudioComp->SetupAttachment(StaticMesh);
+	AudioComp->SetupAttachment(PhysicsStaticMesh);
 
 	GrabComponent = CreateDefaultSubobject<UGrabComponent>(TEXT("Grab"));
-	GrabComponent->SetupAttachment(StaticMesh);
+	GrabComponent->SetupAttachment(PhysicsStaticMesh);
 
 
 }
@@ -31,16 +37,6 @@ void ACastanet::BeginPlay()
 	Super::BeginPlay();
 	GrabComponent->OnGrabbed.BindUObject(this, &ACastanet::OnGrabbed);
 	GrabComponent->OnReleased.BindUObject(this, &ACastanet::OnReleased);
-
-	
-
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
-	{
-		// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
-		EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
-		EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
-		UE_LOG(LogTemp, Warning, TEXT("Input setup"))
-	}
 
 //	AddMappingContext(IMCCastanetRight);
 }
@@ -66,9 +62,23 @@ void ACastanet::OnGrabbed()
 			case EControllerHand::Left:
 
 				Subsystem->AddMappingContext(IMCCastanetLeft, 0);
+				if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
+				{
+					// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
+					EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
+					EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
+					UE_LOG(LogTemp, Warning, TEXT("Input setup"))
+				}
 				break;
 			case EControllerHand::Right:
 				Subsystem->AddMappingContext(IMCCastanetRight, 0);
+				if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
+				{
+					// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
+					EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
+					EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
+					UE_LOG(LogTemp, Warning, TEXT("Input setup"))
+				}
 				break;
 			default:
 				break;
@@ -129,6 +139,16 @@ void ACastanet::PlayCastanet()
 		AudioComp->Play();
 	}
 	PlayHapticEffectOnController(OnClapHapticEffect);
+
+	//move both castanets
+	TopStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
+	BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
+}
+
+void ACastanet::StopCastanet()
+{
+	TopStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
+	BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
 }
 
 void ACastanet::PlayHapticEffectOnController(UHapticFeedbackEffect_Base* HitEffect)

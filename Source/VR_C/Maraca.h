@@ -43,8 +43,8 @@ private:
 	UPROPERTY(EditAnywhere)
 		UHapticFeedbackEffect_Base* OnHitStickHapticEffect;
 
-	FVector CurrentSpeed;
-	FVector OldSpeed;
+	FVector CurrentSpeed = FVector(0, 0, 0);
+	FVector OldSpeed = FVector(0, 0, 0);
 
 	float MaxSpeed = 100;
 

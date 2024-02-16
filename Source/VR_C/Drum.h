@@ -62,6 +62,9 @@ private:
 	void ResetHitAllowed();
 
 	bool bIsHitAllowed = true;
+
+	UPROPERTY(EditAnywhere)
+		float ForceMultiplier = 1;
 };
 
 

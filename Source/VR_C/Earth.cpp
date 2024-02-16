@@ -48,21 +48,31 @@ void AEarth::Tick(float DeltaTime)
 
 void AEarth::EarthMove(FString InSelectedCountryStr)
 {
-	StartingRotation = StaticMeshComponent->GetComponentRotation();
+	StartingRotation = StaticMeshComponent->GetRelativeRotation();
 
 	int SelectedCountryInt = 0;
 	if (InSelectedCountryStr == TEXT("Spain"))
 	{
 		SelectedCountryInt = 0;
-		RotationToCountry = FRotator(0, 0, 90);
+		RotationToCountry = FRotator(0, -90, 40);
+	}
+	else if (InSelectedCountryStr == TEXT("Africa"))
+	{
+		SelectedCountryInt = 1;
+		RotationToCountry = FRotator(0, -90, 0);
+	}
+	else if (InSelectedCountryStr == TEXT("Mexico"))
+	{
+		SelectedCountryInt = 2;
+		RotationToCountry = FRotator(0, 200, 0);
 	}
 	else if (InSelectedCountryStr == TEXT("China"))
 	{
-		SelectedCountryInt = 1;
-		RotationToCountry = FRotator(0, 0, 90);
+		SelectedCountryInt = 3;
+		RotationToCountry = FRotator(-20, 10, 0);
 	}
 
-	MatToChange->SetScalarParameterValue(TEXT("SelectedCountry"), SelectedCountryInt);
+	MatToChange->SetScalarParameterValue(TEXT("SelectCountry"), SelectedCountryInt);
 
 	CurveTimeline.PlayFromStart();	
 
@@ -75,7 +85,7 @@ void AEarth::DoCurveTick()
 	MatToChange->SetScalarParameterValue(TEXT("LevelOfRed"), CurveValue);
 
 	FRotator NewRotation = FMath::Lerp(StartingRotation, RotationToCountry, CurveValue);
-	StaticMeshComponent->SetWorldRotation(NewRotation);
+	StaticMeshComponent->SetRelativeRotation(NewRotation);
 }
 
 

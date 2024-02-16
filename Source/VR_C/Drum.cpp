@@ -51,7 +51,8 @@ int ADrum::RegisterHit(class ADrumstick* DrumstickRef)
 	{
 		return 0;
 	}
-	AudioHitComp->VolumeMultiplier = Speed * Speed / 25000 * 7;
+	float VolumeMultiplier = (Speed * Speed * ForceMultiplier) / (MaxSpeed * MaxSpeed);
+	AudioHitComp->VolumeMultiplier = VolumeMultiplier;
 	AudioHitComp->Play();
 
 	//Take Velocity into account and change effect amplitude

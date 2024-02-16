@@ -44,7 +44,14 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* StaticMesh;
+		UStaticMeshComponent* TopStaticMesh;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* BottomStaticMesh;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* PhysicsStaticMesh;
+
 
 	UPROPERTY(EditAnywhere)
 		UGrabComponent* GrabComponent;
@@ -58,6 +65,8 @@ private:
 	void RemoveMappingContext(class UInputMappingContext* IMC_Castanet);
 
 	void PlayCastanet();
+
+	void StopCastanet();
 
 	bool GetIsHeld();
 

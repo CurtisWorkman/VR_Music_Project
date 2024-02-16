@@ -65,4 +65,10 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		FRotator CountryRotation;
+
+	UPROPERTY(EditAnywhere)
+		FString CountryString;
+
+	UPROPERTY(EditAnywhere)
+		class ARoomSphere* RoomSphereRef;
 };

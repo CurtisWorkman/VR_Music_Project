@@ -41,8 +41,11 @@ void AMaraca::BeginPlay()
 void AMaraca::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	CurrentSpeed = BaseMesh->GetPhysicsLinearVelocityAtPoint(SpeedMeasurePoint->GetRelativeLocation());
+	if (BaseMesh != nullptr)
+	{
+		CurrentSpeed = BaseMesh->GetPhysicsLinearVelocityAtPoint(SpeedMeasurePoint->GetRelativeLocation());
+	}
+	
 //	UE_LOG(LogTemp, Warning, TEXT("current speed %f"), CurrentSpeed);
 	FVector SpeedDiff = CurrentSpeed - OldSpeed;
 
