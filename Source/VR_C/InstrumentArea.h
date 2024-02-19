@@ -71,4 +71,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 		class ARoomSphere* RoomSphereRef;
+
+	bool bEndLessonEarly = false;
 };

@@ -30,12 +30,13 @@ protected:
 		USceneComponent* RootComp;
 
 	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* StaticMesh;
+		UStaticMeshComponent* HitMesh;
 
 	UPROPERTY(EditAnywhere)
 		UAudioComponent* AudioHitComp;
 	
-	float MaxSpeed = 500;
+	UPROPERTY(EditAnywhere)
+	float MaxSpeed = 250;
 
 public:	
 	// Called every frame
@@ -64,7 +65,7 @@ private:
 	bool bIsHitAllowed = true;
 
 	UPROPERTY(EditAnywhere)
-		float ForceMultiplier = 1;
+		float ForceMultiplier = 5;
 };
 
 

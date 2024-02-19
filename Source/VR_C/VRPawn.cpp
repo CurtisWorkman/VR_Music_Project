@@ -75,7 +75,6 @@ void AVRPawn::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
-	UE_LOG(LogTemp, Warning, TEXT("Move"))
 	if (Controller != nullptr && CameraComponent != nullptr)
 	{
 		// add movement 		

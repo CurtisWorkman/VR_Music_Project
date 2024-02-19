@@ -80,6 +80,7 @@ void AInstrumentArea::StartLesson()
 			}
 			
 			GameMode->StorePlayingInstrument(this);
+			bEndLessonEarly = false;
 
 			DialogueIndex = -1;
 			IterateDialogue();
@@ -109,21 +110,24 @@ void AInstrumentArea::StartTextAudio()
 
 void AInstrumentArea::IterateDialogue()
 {
-	DialogueIndex++;
-	if (DialogueIndex < DialogueText.Num() && DialogueIndex < DialogueSound.Num())
+	if (bEndLessonEarly == false)
 	{
-		TextComponent->SetText(FText::FromString(DialogueText[DialogueIndex]));
-
-		TextSound->SetSound(DialogueSound[DialogueIndex]);
-		StartTextAudio();
-	}
-	else
-	{
-		TextComponent->SetText(FText::FromString(""));
-		AVR_CGameModeBase* GameMode = Cast<AVR_CGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
-		if (GameMode != nullptr)
+		DialogueIndex++;
+		if (DialogueIndex < DialogueText.Num() && DialogueIndex < DialogueSound.Num())
 		{
-			GameMode->StorePlayingInstrument(nullptr);
+			TextComponent->SetText(FText::FromString(DialogueText[DialogueIndex]));
+
+			TextSound->SetSound(DialogueSound[DialogueIndex]);
+			StartTextAudio();
+		}
+		else
+		{
+			TextComponent->SetText(FText::FromString(""));
+			AVR_CGameModeBase* GameMode = Cast<AVR_CGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+			if (GameMode != nullptr)
+			{
+				GameMode->StorePlayingInstrument(nullptr);
+			}
 		}
 	}
 	
@@ -131,6 +135,8 @@ void AInstrumentArea::IterateDialogue()
 
 void AInstrumentArea::EndLessonEarly()
 {
+	bEndLessonEarly = true;
+	UE_LOG(LogTemp, Warning, TEXT("End Lesson"));
 	TextComponent->SetText(FText::FromString(""));
 	TextSound->Stop();
 	if (EarthComp != nullptr)

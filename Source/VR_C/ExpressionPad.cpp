@@ -22,7 +22,7 @@ AExpressionPad::AExpressionPad() : ADrum()
 	ExpressionPadMenu->SetupAttachment(RootComp);
 
 	HandHoverArea = CreateDefaultSubobject<UCapsuleComponent>(TEXT("HoverArea"));
-	HandHoverArea->SetupAttachment(StaticMesh);
+	HandHoverArea->SetupAttachment(HitMesh);
 
 	Cursor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CursorComp"));
 	Cursor->SetupAttachment(ExpressionPadMenu);
@@ -65,7 +65,7 @@ void AExpressionPad::BeginPlay()
 		ColourTimeline.SetTimelineFinishedFunc(TimelineFinishedCallback);
 		TimeLineLength = ColourTimeline.GetTimelineLength();
 	}
-	MatToChange = StaticMesh->CreateDynamicMaterialInstance(0);
+	MatToChange = HitMesh->CreateDynamicMaterialInstance(0);
 //	ColourTimeline.SetPlayRate(.0f);
 	
 }

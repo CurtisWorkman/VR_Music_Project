@@ -39,6 +39,16 @@ void ACastanet::BeginPlay()
 	GrabComponent->OnReleased.BindUObject(this, &ACastanet::OnReleased);
 
 //	AddMappingContext(IMCCastanetRight);
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
+	{
+		// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
+		EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
+		EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
+		EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
+		EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
+		UE_LOG(LogTemp, Warning, TEXT("Input setup"))
+
+	}
 }
 
 
@@ -62,27 +72,30 @@ void ACastanet::OnGrabbed()
 			case EControllerHand::Left:
 
 				Subsystem->AddMappingContext(IMCCastanetLeft, 0);
-				if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
-				{
-					// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
-					EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
-					EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
-					UE_LOG(LogTemp, Warning, TEXT("Input setup"))
-				}
+				UE_LOG(LogTemp, Warning, TEXT("left"))
+//				if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
+//				{
+//					// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
+//					EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
+//					EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
+	//				EnhancedInputComponent->Remove
+//					UE_LOG(LogTemp, Warning, TEXT("Input setup"))
+//				}
 				break;
 			case EControllerHand::Right:
 				Subsystem->AddMappingContext(IMCCastanetRight, 0);
-				if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
-				{
-					// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
-					EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
-					EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
-					UE_LOG(LogTemp, Warning, TEXT("Input setup"))
-				}
+//				if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
+//				{
+	//				// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
+	//				EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
+	//				EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
+	//				UE_LOG(LogTemp, Warning, TEXT("Input setup"))
+//				}
 				break;
 			default:
 				break;
 			}
+			bIsGrabbed = true;
 		}
 	}
 }
@@ -102,6 +115,7 @@ void ACastanet::OnReleased()
 	default:
 		break;
 	}
+	bIsGrabbed = false;
 }
 
 void ACastanet::AddMappingContext(UInputMappingContext* IMC_Castanet)
@@ -133,6 +147,7 @@ void ACastanet::RemoveMappingContext(UInputMappingContext* IMC_Castanet)
 
 void ACastanet::PlayCastanet()
 {
+	if (!bIsGrabbed) return;
 	UE_LOG(LogTemp, Warning, TEXT("Castanet"))
 	if (AudioComp != nullptr)
 	{
@@ -147,6 +162,7 @@ void ACastanet::PlayCastanet()
 
 void ACastanet::StopCastanet()
 {
+	if (!bIsGrabbed) return;
 	TopStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
 	BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
 }

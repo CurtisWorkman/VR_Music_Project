@@ -71,4 +71,6 @@ private:
 	bool GetIsHeld();
 
 	void PlayHapticEffectOnController(UHapticFeedbackEffect_Base* HitEffect);
+
+	bool bIsGrabbed = false;
 };

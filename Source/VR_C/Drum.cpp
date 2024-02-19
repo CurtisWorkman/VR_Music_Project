@@ -14,14 +14,14 @@ ADrum::ADrum()
 	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root Component"));
 	RootComponent = RootComp;
 
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	StaticMesh->SetupAttachment(RootComp);
+	HitMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hitting Mesh"));
+	HitMesh->SetupAttachment(RootComp);
 
 	HitArea = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hit Area"));
-	HitArea->SetupAttachment(StaticMesh);
+	HitArea->SetupAttachment(HitMesh);
 
 	AudioHitComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Hit Sound"));
-	AudioHitComp->SetupAttachment(StaticMesh);
+	AudioHitComp->SetupAttachment(HitMesh);
 	
 	AudioHitComp->bCanPlayMultipleInstances = true;
 	AudioHitComp->bAutoActivate = false;
