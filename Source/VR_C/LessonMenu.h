@@ -72,10 +72,10 @@ private:
 		UStaticMeshComponent* Cursor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputMappingContext* MenuMappingContext;
+		class UInputMappingContext* LessonMenuMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* MenuInteractRight;
+		class UInputAction* LessonMenuInteractRight;
 
 	ALessonTemplate* CurrentLesson;
 };

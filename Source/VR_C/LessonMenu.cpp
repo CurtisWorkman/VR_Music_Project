@@ -40,7 +40,7 @@ void ALessonMenu::BeginPlay()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(MenuMappingContext, 2);
+			Subsystem->AddMappingContext(LessonMenuMappingContext, 2);
 		}
 	}
 
@@ -50,8 +50,8 @@ void ALessonMenu::BeginPlay()
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerController->InputComponent))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Input Setup"));
-		EnhancedInputComponent->BindAction(MenuInteractRight, ETriggerEvent::Started, this, &ALessonMenu::OnStartInteractRight);
-		EnhancedInputComponent->BindAction(MenuInteractRight, ETriggerEvent::Completed, this, &ALessonMenu::OnCompleteInteractRight);
+		EnhancedInputComponent->BindAction(LessonMenuInteractRight, ETriggerEvent::Started, this, &ALessonMenu::OnStartInteractRight);
+		EnhancedInputComponent->BindAction(LessonMenuInteractRight, ETriggerEvent::Completed, this, &ALessonMenu::OnCompleteInteractRight);
 	}
 
 	ULessonMenuWidget* LessonMenuWidget = Cast<ULessonMenuWidget>(LessonMenuWidgetComp->GetUserWidgetObject());
@@ -138,7 +138,7 @@ void ALessonMenu::EndLesson(int NewScore)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(MenuMappingContext, 2);			//Take this out or do checks when other menu is open
+			Subsystem->AddMappingContext(LessonMenuMappingContext, 2);			//Take this out or do checks when other menu is open
 		}
 	}
 }
@@ -153,7 +153,7 @@ void ALessonMenu::CloseMenu()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->RemoveMappingContext(MenuMappingContext);			//Take this out or do checks when other menu is open
+			Subsystem->RemoveMappingContext(LessonMenuMappingContext);			//Take this out or do checks when other menu is open
 		}
 	}
 
