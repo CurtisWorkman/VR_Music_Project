@@ -42,10 +42,10 @@ void ACastanet::BeginPlay()
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(UGameplayStatics::GetPlayerController(this, 0)->InputComponent))
 	{
 		// You can bind to any of the trigger events here by changing the "ETriggerEvent" enum value
-		EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
-		EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
-		EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanet);
-		EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanet);
+		EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanetLeft);
+		EnhancedInputComponent->BindAction(ClapLeftAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanetLeft);
+		EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Started, this, &ACastanet::PlayCastanetRight);
+		EnhancedInputComponent->BindAction(ClapRightAction, ETriggerEvent::Completed, this, &ACastanet::StopCastanetRight);
 		UE_LOG(LogTemp, Warning, TEXT("Input setup"))
 
 	}
@@ -145,26 +145,80 @@ void ACastanet::RemoveMappingContext(UInputMappingContext* IMC_Castanet)
 	}
 }
 
-void ACastanet::PlayCastanet()
+void ACastanet::PlayCastanetLeft()
 {
-	if (!bIsGrabbed) return;
-	UE_LOG(LogTemp, Warning, TEXT("Castanet"))
-	if (AudioComp != nullptr)
+	EControllerHand Controller = GrabComponent->GetHeldByHand();
+	switch (Controller)
 	{
-		AudioComp->Play();
-	}
-	PlayHapticEffectOnController(OnClapHapticEffect);
+	case EControllerHand::Left:
+		if (!bIsGrabbed) return;
+		UE_LOG(LogTemp, Warning, TEXT("Castanet"))
+			if (AudioComp != nullptr)
+			{
+				AudioComp->Play();
+			}
+		PlayHapticEffectOnController(OnClapHapticEffect);
 
-	//move both castanets
-	TopStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
-	BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
+		//move both castanets
+		TopStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
+		BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
+		break;
+	default:
+		break;
+	}
 }
 
-void ACastanet::StopCastanet()
+void ACastanet::StopCastanetLeft()
 {
-	if (!bIsGrabbed) return;
-	TopStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
-	BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
+	EControllerHand Controller = GrabComponent->GetHeldByHand();
+	switch (Controller)
+	{
+	case EControllerHand::Left:
+		if (!bIsGrabbed) return;
+		TopStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
+		BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
+		break;
+	default:
+		break;
+	}
+}
+
+void ACastanet::PlayCastanetRight()
+{
+	EControllerHand Controller = GrabComponent->GetHeldByHand();
+	switch (Controller)
+	{
+	case EControllerHand::Right:
+		if (!bIsGrabbed) return;
+		UE_LOG(LogTemp, Warning, TEXT("Castanet"))
+			if (AudioComp != nullptr)
+			{
+				AudioComp->Play();
+			}
+		PlayHapticEffectOnController(OnClapHapticEffect);
+
+		//move both castanets
+		TopStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
+		BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
+		break;
+	default:
+		break;
+	}
+}
+
+void ACastanet::StopCastanetRight()
+{
+	EControllerHand Controller = GrabComponent->GetHeldByHand();
+	switch (Controller)
+	{
+	case EControllerHand::Right:
+		if (!bIsGrabbed) return;
+		TopStaticMesh->AddRelativeRotation(FRotator(0, 0, 5));
+		BottomStaticMesh->AddRelativeRotation(FRotator(0, 0, -5));
+		break;
+	default:
+		break;
+	}
 }
 
 void ACastanet::PlayHapticEffectOnController(UHapticFeedbackEffect_Base* HitEffect)

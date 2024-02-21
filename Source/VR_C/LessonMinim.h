@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "LessonTemplate.h"
-#include "LessonCrotchet.generated.h"
+#include "LessonMinim.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class VR_C_API ALessonCrotchet : public ALessonTemplate
+class VR_C_API ALessonMinim : public ALessonTemplate
 {
 	GENERATED_BODY()
 	
 
 public:
-	ALessonCrotchet();
+	ALessonMinim();
 
 protected:
 	virtual void BeginPlay() override;
@@ -24,10 +24,10 @@ protected:
 private:
 
 	UPROPERTY(EditAnywhere)
-		USoundBase* TextSound;
+		TArray<USoundBase*> Speech;
 
 	UFUNCTION()
-	void IncrementState();
+		void IncrementState();
 
 	int State = -1;
 

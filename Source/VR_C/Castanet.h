@@ -64,9 +64,13 @@ private:
 	void AddMappingContext(class UInputMappingContext* IMC_Castanet);
 	void RemoveMappingContext(class UInputMappingContext* IMC_Castanet);
 
-	void PlayCastanet();
+	void PlayCastanetLeft();
 
-	void StopCastanet();
+	void StopCastanetLeft();
+
+	void PlayCastanetRight();
+
+	void StopCastanetRight();
 
 	bool GetIsHeld();
 

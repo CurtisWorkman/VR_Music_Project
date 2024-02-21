@@ -21,7 +21,6 @@ void AIntroLesson::IncrementState()
 {
 	State++;
 
-	char Notes[] = "CCCC";
 	switch (State)
 	{
 	case 0:
@@ -31,33 +30,27 @@ void AIntroLesson::IncrementState()
 		StartLessonText(FText::FromString(TEXT("In these lessons, we are going to teach you some fundamental musical ideas.")), Speech[State]);
 		break;
 	case 2:
-		StartLessonText(FText::FromString(TEXT("Aimed at beginners, we hope to introduce to you some terms you may not have heard before, and show you how they are applied in music.")), Speech[State]);
+		StartLessonText(FText::FromString(TEXT("In each lesson, you will have an opportunity to solidify your knowledge by scoring points!")), Speech[State]);
 		break;
 	case 3:
-		StartLessonText(FText::FromString(TEXT("In each lesson, you will have an opportunity to solidify your knowledge with a game and by scoring points!")), Speech[State]);
+		StartLessonText(FText::FromString(TEXT("Grab those drumsticks in front of you and play along to the ticks by hitting the drum!")), Speech[State]);
 		break;
 	case 4:
-		StartLessonText(FText::FromString(TEXT("Grab those drumsticks in front of you and play a long to the ticks by hitting the drum!")), Speech[State]);
-		break;
-	case 5:
 		StartLessonText(FText::FromString(TEXT("We will count you in for four beats then you can start!")), Speech[State]);
 		break;
-	case 6:
-		StartLessonText(FText::FromString(TEXT("Ready? Let's Start!")), Speech[State]);
+	case 5:
+		StartLessonText(FText::FromString(TEXT("Let's Start!")), Speech[State]);
 		break;
-	case 7:
+	case 6:
 		StartRhythmLesson(FString(TEXT("CCCC")), 60);
 		break;
+	case 7:
+		StartLessonText(FText::FromString(TEXT("Congratulations! You have completed the introduction lesson.")), Speech[State]);
+		break;
 	case 8:
-		StartLessonText(FText::FromString(TEXT("Congratulations! You have completed the introduction lesson")), Speech[State]);
+		StartLessonText(FText::FromString(TEXT("Good luck with the other lessons and have fun!")), Speech[State]);
 		break;
 	case 9:
-		StartLessonText(FText::FromString(TEXT("Good luck with the other lessons! And remember... ")), Speech[State]);
-		break;
-	case 10:
-		StartLessonText(FText::FromString(TEXT("Have fun!")), Speech[State]);
-		break;
-	case 11:
 		EndLesson();
 		break;
 	default:
