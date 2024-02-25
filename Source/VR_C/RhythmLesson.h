@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "NiagaraComponent.h"
+#include <vector>
 #include "RhythmLesson.generated.h"
 
 UCLASS()
