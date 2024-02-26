@@ -164,52 +164,55 @@ void ALessonTemplate::RegisterHit()
 		//find closest to percentthrough
 		float closestNum = 1;
 		int ClosestPosition = 0;
-
-		for (int i = 0; i < NoteValuesArray.size(); i++)
+		if (NoteValuesArray.size() > 0)
 		{
-			float NotePosition = NoteValuesArray[i];
-			float scoretoadd = (std::abs(PercentThrough - NotePosition));
-			if (scoretoadd < closestNum)
+			for (int i = 0; i < NoteValuesArray.size(); i++)
 			{
-				closestNum = scoretoadd;
-				ClosestPosition = i;
-			}
-		}
-
-		if (NoteValuesArray[ClosestPosition] != 2)			//arbitrary number to show note has been used and shouldn't be scored again. should loop through so all prev cant be scored
-		{
-			for (int i = ClosestPosition; i >= 0; i--)
-			{
-				if (NoteValuesArray[i] != 2)
+				float NotePosition = NoteValuesArray[i];
+				float scoretoadd = (std::abs(PercentThrough - NotePosition));
+				if (scoretoadd < closestNum)
 				{
-					NoteValuesArray[i] = 2;
-					RhythmLessonBarRef->ChangeNoteColour(i, 0);
+					closestNum = scoretoadd;
+					ClosestPosition = i;
 				}
+			}
+
+			if (NoteValuesArray[ClosestPosition] != 2)			//arbitrary number to show note has been used and shouldn't be scored again. should loop through so all prev cant be scored
+			{
+				for (int i = ClosestPosition; i >= 0; i--)
+				{
+					if (NoteValuesArray[i] != 2)
+					{
+						NoteValuesArray[i] = 2;
+						RhythmLessonBarRef->ChangeNoteColour(i, 0);
+					}
 				
-			}		
-			float Score = 1 - closestNum;
-			if (Score > 0.95)
-			{
-				Score = 100;
+				}		
+				float Score = 1 - closestNum;
+				if (Score > 0.95)
+				{
+					Score = 100;
+				}
+				else if (Score > 0.90)
+				{
+					Score = 50;
+				}
+				else if (Score > 0.85)
+				{
+					Score = 25;
+				}
+				else
+				{
+					Score = 0;
+				}
+				int IntScore = static_cast<int>(Score);
+	//			AddToScore(IntScore);
+				LessonScore = LessonScore + IntScore;
+				//Remove note from array so cant be scored again
+				//Change note colour depending on score
+				RhythmLessonBarRef->ChangeNoteColour(ClosestPosition, IntScore);
+
 			}
-			else if (Score > 0.90)
-			{
-				Score = 50;
-			}
-			else if (Score > 0.85)
-			{
-				Score = 25;
-			}
-			else
-			{
-				Score = 0;
-			}
-			int IntScore = static_cast<int>(Score);
-//			AddToScore(IntScore);
-			LessonScore = LessonScore + IntScore;
-			//Remove note from array so cant be scored again
-			//Change note colour depending on score
-			RhythmLessonBarRef->ChangeNoteColour(ClosestPosition, IntScore);
 		}	
 	}
 }
